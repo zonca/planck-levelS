@@ -1,0 +1,43 @@
+LS_OPTFLAGS:= -O3 -ffast-math -march=native -fomit-frame-pointer
+LS_DEBUGFLAGS:= -g
+LS_OMPFLAGS:= #-fopenmp
+LS_PROFILEFLAGS:= #-pg
+LS_STATICFLAGS:= #-static
+LS_PICFLAGS:= #-fPIC
+LS_MIXBINFLAGS:= -DMIXBIN_SUPPORTED
+
+#EXTERNAL_CFITSIO=yes
+#FITSDIR=/usr
+#CFITSIO_EXT_INC=-I$(FITSDIR)/include
+#CFITSIO_EXT_LIB=-L$(FITSDIR)/lib -lcfitsio
+
+MOD= mod
+MIXBIN_SUPPORTED=yes
+
+FC= gfortran -std=gnu -fno-second-underscore
+FL= gfortran -std=gnu -fno-second-underscore
+
+F_MODPATH= -I
+F_DEFINE= -D
+
+FWARNFLAGS= -Wall -Wextra -Wfatal-errors
+FCFLAGS= $(FWARNFLAGS) $(LS_PROFILEFLAGS) $(LS_DEBUGFLAGS) $(LS_OMPFLAGS) $(LS_PICFLAGS) $(LS_OPTFLAGS) -c -fimplicit-none -fdata-sections -ffunction-sections
+FLFLAGS= -L. -L$(LIBDIR) $(LS_PROFILEFLAGS) $(LS_OMPFLAGS) $(LS_STATICFLAGS) $(LS_PICFLAGS) $(LS_OPTFLAGS) -Wl,--gc-sections
+
+CC= clang
+CL= clang
+CWARNFLAGS= -W -ferror-limit=1
+CCFLAGS_NO_C= $(CWARNFLAGS) $(LS_PROFILEFLAGS) $(LS_DEBUGFLAGS) $(LS_OMPFLAGS) $(LS_PICFLAGS) $(LS_OPTFLAGS) -fno-strict-aliasing --std=gnu99 -pedantic -fdata-sections -ffunction-sections
+CCFLAGS= $(CCFLAGS_NO_C) -c
+CLFLAGS= -L. -L$(LIBDIR) $(LS_PROFILEFLAGS) $(LS_OMPFLAGS) $(LS_STATICFLAGS) $(LS_PICFLAGS) $(LS_OPTFLAGS) -Wl,--gc-sections -lm
+
+CXX= clang++
+CXXL= clang++
+CXXWARNFLAGS= -W -ferror-limit=1
+CXXCFLAGS_NO_C= $(CXXWARNFLAGS) $(LS_PROFILEFLAGS) $(LS_DEBUGFLAGS) $(LS_OMPFLAGS) $(LS_PICFLAGS) $(LS_OPTFLAGS) $(LS_MIXBINFLAGS) -ansi -fdata-sections -ffunction-sections
+CXXCFLAGS= $(CXXCFLAGS_NO_C) -c
+CXXLFLAGS= -L. -L$(LIBDIR) $(LS_PROFILEFLAGS) $(LS_OMPFLAGS) $(LS_STATICFLAGS) $(LS_PICFLAGS) $(LS_OPTFLAGS) -Wl,--gc-sections
+
+ARCREATE= llvm-ar cr
+
+MIX_EXTRALIBS=-lgfortran

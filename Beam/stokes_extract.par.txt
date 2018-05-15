@@ -1,0 +1,12 @@
+Parameters read by stokes_extract:
+
+Either:
+  beam_polar (string):
+    Object containing polar main beam.
+Or:
+  beam_square (string):
+    Object containing square main beam.
+End
+
+text_file (string):
+  Output text file for beam Stokes parameters.

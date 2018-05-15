@@ -1,0 +1,10 @@
+Parameters read by focalplane:
+
+focalplane (string):
+  input ASCII file containing the detector database
+
+focalplane_db (string):
+  output file containing the detector database
+
+theta_b (double):
+  bore sight angle in degrees (also known as kappa)

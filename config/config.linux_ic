@@ -1,0 +1,27 @@
+# Configuration file for Intel icc/icpc/ifort under Linux
+
+MOD= mod
+MIXBIN_SUPPORTED=yes
+
+FC= ifort
+FL= ifort
+
+F_MODPATH= -I
+F_DEFINE= -D
+
+FCFLAGS= -c -O2 -ip -openmp -vec-report0 -openmp-report0
+FLFLAGS= -L. -L$(LIBDIR) -O2 -ip -openmp
+
+CC= icc
+CCFLAGS_NO_C= -std=gnu99 -O3 -ip -openmp -Wbrief -Wall -vec-report0 -openmp-report0 -wd383,981,1419,1572
+CCFLAGS= $(CCFLAGS_NO_C) -c
+
+CXX= icpc
+CXXL= icpc
+CXXCFLAGS_NO_C= -DMIXBIN_SUPPORTED -ansi -O3 -ip -ansi_alias -openmp -Wbrief -Wall -vec-report0 -openmp-report0 -wd383,444,981,1572
+CXXCFLAGS= $(CXXCFLAGS_NO_C) -c
+CXXLFLAGS= -L. -L$(LIBDIR) -O3 -ip -openmp
+
+ARCREATE= ar cr
+
+MIX_EXTRALIBS= -lifcore

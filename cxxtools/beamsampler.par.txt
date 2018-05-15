@@ -1,0 +1,23 @@
+Parameters read by beamsampler:
+
+focalplane_db (string):
+  input file containing the detector database
+
+detector_id (string):
+  name of the detector
+
+beam_in (string):
+  input object containing the beam a_lm
+
+beam_out (string):
+  output object containing the smeared beam a_lm
+
+n_integ (int, dafault=5):
+  number of samples to use for time constant integration
+  (only relevant for HFI detectors)
+
+sat_rpm (double, default=1):
+  number of satellite revolutions per minute
+
+mmax_out (int):
+  maximum m quantum number for the output beam

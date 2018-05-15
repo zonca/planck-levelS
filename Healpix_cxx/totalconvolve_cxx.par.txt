@@ -1,0 +1,35 @@
+Parameters read by totalconvolve_cxx:
+
+fwhm_deconv (real, default=0):
+  deconvolution FWHM in arc minutes.
+  If the input map is smoothed, set fwhm_deconv to the FWHM of the smoothing
+  beam, else set to 0.
+
+polarisation (bool, default=true):
+  whether the G and C components are also convolved and added to T
+
+conv_lmax (integer):
+  maximum l fo the convolution
+
+lmax_out (integer, default=conv_lmax):
+  used to determine the resolution of the generated ring set. It will have
+  2*lmax_out+1 pixels in phi-direction.
+
+beam_alm (string):
+  input file containing the beam a_lm
+
+beammmax (integer):
+  maximum m of the beam
+
+m_blocksize (integer, default=beammmax+1):
+  the number of "m" values that are processed simultaneously.
+  Increasing this (up to the maximum of beammmax+1) reduces CPU time,
+  but increases required main memory.
+  Decreasing it (down to te minimum of 1) slows down the code, but can
+  significantly reduce memory usage.
+
+sky_alm (string):
+  input file containing the sky a_lm
+
+ringset (string):
+  output file name for the ring set

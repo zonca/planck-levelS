@@ -1,0 +1,29 @@
+Parameters read by beam2alm:
+
+Either:
+  beam_main_file_polar (string):
+    Object containing a polar main beam.
+Or:
+  beam_main_file_square (string):
+    Object containing a square main beam.
+
+  beam_nphi (integer):
+    Number of phi positions used to interpolate main beam
+
+  beam_ntheta (integer):
+    Number of theta positions used to interpolate main beam
+Or:
+  <nothing>
+End
+
+beam_full_file (string):
+  Object containing full-sky beam. If left empty, there is no full-sky beam.
+
+beam_lmax (integer):
+  maximum l for analysis
+
+beam_mmax (integer):
+  maximum m for analysis
+
+beam_alm_file (string):
+  Output object for beam multipoles

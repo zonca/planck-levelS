@@ -1,0 +1,53 @@
+This branch of the repository contains the Planck Simulation
+Package. It is subdivided into the following main sub-packages:
+
+ - libcfitsio:
+   external library required for FITS file access
+   (see http://heasarc.gsfc.nasa.gov/docs/software/fitsio/)
+
+ - c_utils, libfftpack and libsharp:
+   C libraries required by other LevelS components
+
+ - cxxsupport: miscellaneous C++ utility functions needed by the C++ codes
+
+ - Healpix_cxx: software package implementing the Hierarchical Equal-Area
+   equi-Lateral Pixelisation scheme
+
+ - skymixer2: extrapolation and combination of foreground components
+
+ - cxxmod: C++ modules simulating various effects needed by multimod
+
+ - pntsrcconvolver: C++ point source convolution code, used by multimod
+
+ - multimod: C++ code for production of Planck data time streams
+
+ - cxxtools: package containing several convenient standalone modules
+
+ - portability: non-standard extensions needed by Fortran codes
+
+ - Modules: common Fortran modules used by more than one of the simulation
+   packages
+
+ - CAMB: code for computing CMB power spectra
+   Main author: Antony Lewis (antony <at> cosmologist <dot> info)
+
+ - Beam: Codes for creation and manipulation of beam patterns
+   Main author: Mark Ashdown (maja1 <at> mrao.cam<dot>ac.uk)
+
+ - simmission3/4: Code for simulating the satellite dynamics
+   Main author: Daniel Mortlock (d _dot_ mortlock<at>imperial.ac.uk)
+
+ - zlelib: library for computing zodiacal light emission
+   Main author: Michele Maris (maris(at)oats.inaf(dot)it)
+
+ - LFI-specific: Code used by the Low-Frequency Instrument only
+   Main author: Davide Maino (davide(dot)maino_at_mi.infn.it)
+
+ - conviqt: latest incarnation of the total convolution algorithm
+   Main author: Gary Prezeau (Gary.Prezeau_at_jpl.nasa.gov)
+
+In addition:
+
+ - SetupSimulation allows to choose simulation parameters.
+
+Finally, the directory "etc" contains template and default parameter files.

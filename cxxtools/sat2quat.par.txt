@@ -1,0 +1,10 @@
+Parameters read by sat2quat:
+
+infile (string):
+  input object containing the satellite pointing information.
+  This object should have been created by simmission with
+  "simulatepointings = Y".
+
+outfile (string):
+  output object containing the quaternions that correspond to the detailed
+  satellite pointings.

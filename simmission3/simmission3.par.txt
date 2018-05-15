@@ -1,0 +1,202 @@
+# *****************************************************************************
+# simmission3
+# *****************************************************************************
+
+##############################################################################
+# TECHNICAL PARAMETERS
+
+# Seeds for the random number generator
+randseed_1 = 1234
+randseed_2 = 5678
+
+##############################################################################
+# PLANCK MISSION PARAMETERS
+
+# Start date (in yyyymmdd format) and time (in hhmmssdsss format) of the
+# mission.
+date_start = 20080101
+time_start = 120000.000
+
+# End date (in yyyymmdd format) and time (in hhmmssdsss format) of the
+# mission. The resultant time must be after the start of the mission.
+date_end = 20090101
+time_end = 120000.000
+
+##############################################################################
+# SATELLITE PARAMETERS
+
+# How the satellite dynamics are to be modelled (``ideal'' or ``analytical'').
+dynamics = analytical
+
+# Satellite centre-of-gravity (in m, relative to the centre of the Solar
+# panel, in coordinates parallel to the satellite reference system, with
+# the z-displacement ``into'' the satellite or away from the Sun, the
+# x-displacement in the direction of the focal plane and the y-displacement
+# perpendicular to this).
+pos_cog_sat_x = 0.03
+pos_cog_sat_y = 0
+pos_cog_sat_z = 0.93
+
+# Satellite inertia tensor (in kg m^2 in the satellite reference system
+# defined above). The off-diagonal elements I_xz = I_zx and I_yz = I_zy
+# are not zero in this reference frame, unlike the inertial reference
+# frame.
+i_sat_xx = 2236.5
+i_sat_yy = 2276.7
+i_sat_zz = 2650.3
+i_sat_xy = -98
+i_sat_xz = -0.1
+i_sat_yz = 0.7
+
+# Radius of the solar panel (in m).
+r_panel_sat = 2
+
+# Specular reflection coefficient of the satellite solar panel.
+specref_panel_sat = 0.17
+
+# Diffuse reflection coefficient of the satellite solar panel.
+diffrel_panel_sat = 0.1
+
+##############################################################################
+# L2 ORBIT PARAMETERS
+
+# Date (in yyyymmdd format) and time (in hhmmssdsss format) at which
+# the satellite is at the reference point of its L2 orbit.
+date_l2_0_orbit = 20080101
+time_l2_0_orbit = 120000.000
+
+# Reference point of the satellite orbit (in m from L2) in a local
+# reference frame.
+pos_l2_0_x_orbit = 0.90000E+08
+pos_l2_0_y_orbit = 0.90000E+08
+pos_l2_0_z_orbit = 0.90000E+08
+
+# Reference phase of the satellite orbit around L2 (in deg).
+phase_l2_0_orbit = 0.0
+
+##############################################################################
+# POINTING PARAMETERS
+
+# The z-axis pointing mode, the default option being ``ideal'' (i.e.,
+# the satellite's z-axis is always ideal), the other option being
+# ``gaussian'' (i.e., there is a Gaussian error added to the nominal
+# pointing of mean error sigma_zaxis_x_pointing (in arcmin) about the
+# x-axis and sigma_zaxis_y_pointing (in arcmin) about the y-axis but
+# with a maximum value of delta_zaxis_max_x_pointing (in arcmin) about
+# the x-axis and delta_zaxis_max_y_pointing (in arcmin) about the
+# y-axis)
+mode_zaxis_pointing = gaussian
+
+# Mean error on the satellite pointing (in arcmin).
+sigma_zaxis_x_pointing = 0.2
+sigma_zaxis_y_pointing = 0.2
+
+# Maximum error on the satellite pointing (in arcmin).
+delta_zaxis_max_x_pointing = 1.0
+delta_zaxis_max_y_pointing = 1.0
+
+# The mode with which the initial scan phase of a pointing period is
+# determined, the default being ``ideal'' (in which case the satellite can
+# be thought of as happily rotating continuously about its z-axis, the
+# repointings notwithstanding) or ``random'' (in which case the scan
+# phase is, of course, random).
+mode_phase_pointing = random
+
+# The rotation rate error mode, ``ideal'' again being that the nominal
+# rotation rate is held to rigorously and ``gaussian'' results in
+# Gaussian errors on the rotation rate (of mean error
+# sigma_rate_rot_pointing and maximum error delta_rate_rot_max_pointing).
+mode_rate_rot_pointing = gaussian
+
+# Mean error on the satellite rotation rate [in deg s^(-1)].
+sigma_rate_rot_pointing = 0.0006
+
+# Maximum error on the satellite rotation rate [in deg s^(-1)].
+delta_rate_rot_max_pointing = 0.0012
+
+##############################################################################
+# SCAN STRATEGY PARAMETERS
+
+# Method used to generate the scan strategy, either ``function'' (i.e.,
+# generated mathematically) or ``table'' (i.e., read in from a file).
+method_scan = table
+
+# File name of mission file (only needed if "method_scan=table").
+# This must be an ASCII file.
+scanfile = data/mission_test.dat
+
+# Format of the mission file (only needed if "method_scan=table").
+# This can be either "ppl" (default), "appls", or "plan".
+scandataformat = ppl
+
+# Overall scanning mode (i.e., the scan strategy: ``constantlatitude'', in
+# which the spin axis stays at the reference colatitude; ``step'', in which
+# the spin axis spends part of the year at one latitude and part at another;
+# ``sinusoidal'', which the colatitude of the spin axis varies sinusoidally;
+# ``cycloidal'', in which a similar but more complex cycloid is traced out;
+# or ``fastprecession'' in which there are no pointing periods, but the
+# colatitude varies continuously over the year). For a more explicit
+# definition of the various scan strategies consult the code itself in
+# ../src/mod/planck_scanning.F90.
+mode_scan = cycloidal
+
+# Longitudinal scanning mode (i.e., how the azimuthal or longitudinal
+# angle of the spin axis varies with time: ``followsun'', in which
+# the spin axis always points directly away from the Sun at the start of
+# a pointing period or ``linear'' in which it evolves linearly with time,
+# going through 360.0 deg during a year, but thus sometimes moving slower
+# and sometimes faster than the Sun/Earth; the former choice is most
+# consistent for how the Sun affects the sidelobes of the detectors, the
+# second mode gives more constant longitudinal sky coverage).
+phimode_scan = followsun
+
+# Ecliptic reference colatitude of satellite z-axis (in deg).
+theta_z_0_scan = 90.0
+
+# Variation in ecliptic colatitude of the satellite z-axis (in deg).
+delta_theta_z_scan = 7.0
+
+# Rotation period of the satellite (in min).
+period_rot_scan = 1.0
+
+# Number of rotation periods per pointing period.
+n_rot_pt_scan = 60
+
+# Number of pointing periods per repointing period.
+n_pt_rept_scan = 1
+
+# Number of scan motion cycles (per year).
+n_motion_yr_scan = 2
+
+# Scan reference date (in yyyymmdd format) and time (in hhmmssdsss
+# format).
+date_0_scan = 20080101
+time_0_scan = 120000.000
+
+# Relative phase of scan motion at the start of the mission (between
+# 0.0 and 1.0).
+phase_motion_0_scan = 0.25
+
+# Whether violations of the Solar or Earth aspect angles have error
+# status ``none'' (i.e., ignored completely), ``warning'' (i.e., a
+# warning message is generated but not further action taken) or ``fatal''
+# (i.e., execution is stopped).
+angle_sunearth_status = warning
+
+# Maximum angles between the satellite's negative z-axis and the Sun and
+# Earth, respectively, given in degrees.
+angle_sun_max = 10.0
+angle_earth_max = 15.0
+
+##############################################################################
+# SIMULATION OUTPUTS
+
+# Filename for the mission output file containing all pointings.
+file_mission = satpoint_mission
+
+# Period between output times (in s)
+period_sm_mission = 1
+
+# Whether to perform a full mission simulation (i.e., whether to produce
+# pointing files and loop over the samples in a pointing at all).
+simulatepointings = N

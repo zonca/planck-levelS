@@ -1,0 +1,66 @@
+WARNING: This is still incomplete and preliminary!
+
+Parameters read by skymixer3:
+
+nside (integer):
+  NSIDE parameter of the output map; the templates will be up/degraded
+  accordingly.
+
+output_map (string):
+  output file name for the mixed Healpix map
+
+response_type (string):
+  shape of the detector response function
+    DELTA  : delta function at the detector frequency, with a magnitude of the
+             detector bandwidth
+    TOPHAT : tophat function from the minimum to the maximum frequency of the
+             detector
+    GAUSS  : Gauss function centered at the detector frequency, with a sigma
+             of the detector bandwidth
+    TABULAR: Tabulated response function
+
+if (response_type==TABULAR)
+  response_table (string):
+    input file containing the tabulated detector frequency response
+else
+  focalplane_db (string):
+    input FITS file containing the detector database
+  detector_id (string):
+    name of the detector
+endif
+
+calc_CMB (bool, default=false):
+  should a CMB component be added?
+
+if (calc_CMB)
+  CMB_LS_map (string):
+    input map containing the CMB
+  CMB_LS_monopole (bool, default=false):
+    should the CMB monopole be included?
+endif
+
+analogously for the component types
+  CMB, CMB_PRSM, DUST_PRSM, SYNCHRO_PRSM, SZ_PRSM, RADIO_PRSM, INFRARED_PRSM,
+  FREEFREE_PRSM, SZ, SZKIN, FREEFREE, and CO
+
+
+n_tabular(integer, default=0):
+  number of tabular components
+
+for i=1,n_tabular
+  tabular_[i]_polarised (bool, default=true)
+    true if the input maps for this component are polarised, else false
+
+  tabular_[i]_nmaps (integer):
+    number of maps for this tabular component
+
+  for j=1,tabular_[i]_nmaps
+    tabular_[i]_map_[j] (string):
+      name of the map [j] for component [i]; the map is expected to have the
+      unit MJy/sr
+    if (tabular_[i]_nmaps>1)
+      tabular_[i]_freq_[j] (double):
+        frequency (in Hz) of the map [j] for component [i]
+    endif
+  end
+end

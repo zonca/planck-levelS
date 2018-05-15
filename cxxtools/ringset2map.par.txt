@@ -1,0 +1,20 @@
+Parameters read by ringset2map:
+
+focalplane_db (string):
+  input file containing the detector database
+
+detector_id (string):
+  name of the detector
+
+ringset (string):
+  File containing the input ringset (output of the total convolver)
+
+interpol_order (int, default=1):
+  the order of polynomial interpolation. This parameter must be positive,
+  odd, and smaller than 20.
+
+mapname (string):
+  name of the output Healpix map
+
+nside (int):
+  nside parameter of the output Healpix map

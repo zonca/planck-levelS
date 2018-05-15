@@ -1,0 +1,22 @@
+Parameters read by gaussbeampol:
+
+focalplane_db (string):
+  name of file containing focal plane database
+
+detector_id (string):
+  detector ID
+
+beam_lmax (integer, default=1024):
+  maximum l for output
+
+beam_mmax (integer, default=2):
+  maximum m for output
+
+beam_nstokes (integer, default=3):
+  number of Stokes components (1, 3 or 4)
+
+beam_elliptic (logical, default=.true.):
+  if .true., an elliptic beam is simulated, otherwise a circular beam
+
+beam_alm_file (string):
+  output file containing a_lm of the generated beam

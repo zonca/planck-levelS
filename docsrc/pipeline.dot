@@ -1,0 +1,37 @@
+digraph Pipeline
+  {
+  ratio=compress;size="7,11";
+  powspec[shape=box,fontsize=12,height=.3,label="CMB power spectrum"];
+  camb -> powspec -> syn_alm_cxx;
+  cmb_alm[shape=box,fontsize=12,height=.3,label="CMB a_lm"];
+  syn_alm_cxx -> cmb_alm -> almmixer;
+  fg_maps[shape=box,fontsize=12,height=.3,label="foreground template maps"];
+  fg_maps -> anafast_cxx -> fg_alm;
+  fg_alm[shape=box,fontsize=12,height=.3,label="foreground template a_lm"];
+  fg_alm -> almmixer;
+  mix_alm[shape=box,fontsize=12,height=.3,label="mixed a_lm"];
+  almmixer -> mix_alm -> totalconvolve_cxx;
+  satpoint[shape=box,fontsize=12,height=.3,label="satellite pointing"];
+  simmission -> satpoint -> multimod;
+  ringset[shape=box,fontsize=12,height=.3,label="ring set"];
+  totalconvolve_cxx -> ringset -> multimod;
+  tod[shape=box,fontsize=12,height=.3,label="TOD"];
+  rings[shape=box,fontsize=12,height=.3,label="rings"];
+  map[shape=box,fontsize=12,height=.3,label="coadded maps"];
+  detpt[shape=box,fontsize=12,height=.3,label="detector pointings"];
+  count[shape=box,fontsize=12,height=.3,label="coverage information"];
+  multimod -> tod;
+  multimod -> rings;
+  multimod -> map;
+  multimod -> count;
+  multimod -> detpt;
+  beamgrasp[shape=box,fontsize=12,height=.3,label="GRASP8 beams"];
+  beamalm[shape=box,fontsize=12,height=.3,label="beam a_lm"];
+  beamgrasp -> beam2alm -> beamalm;
+  gaussbeampol -> beamalm -> totalconvolve_cxx;
+  beamgrid[shape=box,fontsize=12,height=.3,label="beam grid"];
+  beamalm -> alm2grid -> beamgrid -> multimod;
+  tgaimg[shape=box,fontsize=12,height=.3,label="TGA images"];
+  { rank=same; "map2tga"; "tgaimg"; }
+  map -> map2tga -> tgaimg;
+  }

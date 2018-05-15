@@ -1,0 +1,19 @@
+This file lists the licensing terms for the individual components of the Planck
+simulation package.
+
+With the exception of code in the subdirectories libcfitsio/, portability/,
+Modules/ and CAMB/, all code in this package is released under the terms of the
+GNU General Public License (GPL) version 2 (see the file COPYING).
+
+The code in the directory libcfitsio/ is licensed under the terms found in the
+file libcfitsio/License.txt.
+
+The code in the directories portability/ and Modules/ is released under the
+terms of the GNU Lesser General Public License (LGPL) version 2 (see the file
+COPYING.lib).
+
+The code in the subdirectory CAMB/ is licensed under the terms found in the file
+CAMB/README.licensing.
+
+Some very short source files do not contain copyright or licensing headers;
+these are considered trivial and not covered by copyright at all.

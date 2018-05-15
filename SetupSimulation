@@ -1,0 +1,200 @@
+#!/bin/sh
+
+checkErrors ()
+  {
+  if [ $? != "0" ] ; then
+    exit 1
+  fi
+  }
+
+fullPath ()
+  {
+  t='TEMP=`cd $TEMP; pwd`'
+  for d in $*; do
+    eval `echo $t | sed 's/TEMP/'$d'/g'`
+  done
+  }
+
+substitute ()
+  {
+  sed "s|_BINPATH_|$BINPATH|g;\
+       s|_PIPE_PATH_|$PIPELINE|g;\
+       s|_OUTPATH_|$OUTPATH|g;\
+       s|_SCRIPTPATH_|$SCRIPTPATH|g;\
+       s|_NSIDE_|$NSIDE|g;\
+       s|_LMAX_|$LMAX|g;\
+       s|_LMAX2_|$LMAX2|g;\
+       s|_FPDB_|$FPDB|g;\
+       s|_DETECTOR_|$DETECTOR|g;\
+       s|_FWHM_|$FWHM|g;\
+       s|_OFACTOR_|$OFACTOR|g;\
+       s|_FIRST_PERIOD_|$FIRST_PERIOD|g;\
+       s|_LAST_PERIOD_|$LAST_PERIOD|g;\
+       s|_NOMINAL_POINTING_|$NOMINAL_POINTING|g;\
+       s|_FULL_MISSION_|$FULL_MISSION|g;\
+       s|_PRECOMMAND_|$PRECOMMAND|g;\
+       s|_VIEWER_|$VIEWER|g" $1 \
+    > $2
+  }
+
+# ============================================================================
+# ============================================================================
+# Configure Test_script and Pipeline Parameters
+# ============================================================================
+# ============================================================================
+
+INPATH="./etc/"
+echo "enter path to the template parameter files (*.par.in)"
+echo "(relative pathnames are OK):"
+echo "default: $INPATH"
+read answer
+if [ $answer ]; then INPATH="$answer"; fi
+
+if [ ! -d $INPATH ]; then
+  echo "directory $INPATH does not exist"
+  exit 1
+fi
+
+fullPath INPATH
+
+PIPELINE="./"
+echo "enter path to the data directory (relative pathnames are OK):"
+echo "default: $PIPELINE"
+echo "This path must contain the subdirectories"
+echo "Maps/ tab/"
+read answer
+if [ $answer ]; then PIPELINE="$answer"; fi
+
+if [ ! -d $PIPELINE ]; then
+  echo "directory $PIPELINE does not exist"
+  exit 1
+fi
+
+for subdir in Maps tab; do
+  if [ ! -d $PIPELINE/$subdir ]; then
+    echo "directory $PIPELINE/$subdir does not exist"
+    exit 1
+  fi
+done
+
+if [ `cat $PIPELINE/tab/testdata.version`'x' != "7.0x" ]; then
+  echo "Wrong version of the testdata package. Please use version 7.0."
+  exit 1
+fi
+
+fullPath PIPELINE
+
+OUTPATH=$PIPELINE/output
+echo "enter path to the output directory (relative pathnames are OK):"
+echo "default: $OUTPATH"
+read answer
+if [ $answer ]; then OUTPATH="$answer"; fi
+if [ ! -d $OUTPATH ]; then mkdir $OUTPATH; checkErrors; fi
+fullPath OUTPATH
+
+SCRIPTPATH=$PIPELINE/etc
+echo "enter path to the directory where the script and parameter files"
+echo "will be generated (relative pathnames are OK):"
+echo "default: $SCRIPTPATH"
+read answer
+if [ $answer ]; then SCRIPTPATH="$answer"; fi
+if [ ! -d $SCRIPTPATH ]; then mkdir $SCRIPTPATH; checkErrors; fi
+fullPath SCRIPTPATH
+
+FPDB=$PIPELINE/tab/focalplane_db.fits
+#echo "enter the name of the focal plane database file:"
+#echo "default: $FPDB"
+#read answer
+#if [ $answer ]; then FPDB="$answer"; fi
+
+if [ ! -f $FPDB ]; then
+  echo "The file $FPDB does not exist"
+  exit 1
+fi
+
+BINPATH=$LEVELS_TARGET/bin
+echo "enter path to the binaries (relative pathnames are OK):"
+echo "default: $BINPATH"
+read answer
+if [ $answer ]; then BINPATH="$answer"; fi
+if [ ! -d $BINPATH ]; then
+  echo "directory $BINPATH does not exist"
+  exit 1
+fi
+fullPath BINPATH
+
+DETECTOR="LFI-28S"
+echo "enter the detector name (default: $DETECTOR):"
+read answer
+if [ $answer ]; then DETECTOR="$answer"; fi
+
+FWHM=`$BINPATH/fpdbhelper $FPDB $DETECTOR fwhm_arcmin`
+if [ "$?" != "0" ] ; then
+  exit 1
+fi
+
+NSIDE="128"
+echo "enter nside for the simulated sky maps (default: $NSIDE):"
+echo "This must be a power of 2. Good choices lie between 16 and 512."
+read answer
+if [ $answer ]; then NSIDE="$answer"; fi
+
+LMAX=`expr $NSIDE + $NSIDE`
+if [ $LMAX -gt 1024 ]; then LMAX=1024; fi
+echo "enter lmax for the whole-sky calculations (should be twice nside,"
+echo "but should not be greater than 1024) (default: $LMAX):"
+read answer
+if [ $answer ]; then LMAX="$answer"; fi
+
+LMAX2=`expr $LMAX + $LMAX`
+
+OFACTOR=1
+echo "Oversampling factor for multimod (default: $OFACTOR)?"
+read answer
+if [ $answer ]; then OFACTOR="$answer"; fi
+
+FIRST_PERIOD="-1"
+echo "First pointing period to simulate (if unsure, leave unchanged)"
+echo "(default: $FIRST_PERIOD)?"
+read answer
+if [ $answer ]; then FIRST_PERIOD="$answer"; fi
+
+LAST_PERIOD="-1"
+echo "Last pointing period to simulate (if unsure, leave unchanged)"
+echo "(default: $LAST_PERIOD)?"
+read answer
+if [ $answer ]; then LAST_PERIOD="$answer"; fi
+
+NOMINAL_POINTING="Y"
+FULL_MISSION="N"
+echo "Should nominal pointing be used (Y/N) (default: $NOMINAL_POINTING)?"
+echo "WARNING: only set this to N if you have lots of time and disk space!"
+read answer
+if [ $answer ]; then NOMINAL_POINTING="$answer"; fi
+if [ $NOMINAL_POINTING = "N" ]; then  FULL_MISSION="Y"; fi
+if [ $NOMINAL_POINTING = "n" ]; then  FULL_MISSION="Y"; fi
+
+VIEWER="xv"
+echo "Enter the name of your picture viewer (default: $VIEWER)"
+read answer
+if [ $answer ]; then VIEWER="$answer"; fi
+
+PRECOMMAND="time"
+#PRECOMMAND="valgrind --leak-check=full --show-reachable=yes"
+#echo "Enter the pre-command (if unsure, press <Enter>)"
+#read answer
+#if [ $answer ]; then PRECOMMAND="$answer"; fi
+
+cd $SCRIPTPATH
+
+SUBSTFILES="Pipeline"
+
+for i in $SUBSTFILES; do
+  substitute $INPATH/${i}.in ${i}
+done
+chmod u+x Pipeline
+
+echo ""
+echo "Parameter files and script generated successfully"
+echo "To start the simulation, execute the script"
+echo `pwd`"/Pipeline"

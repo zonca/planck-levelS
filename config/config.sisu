@@ -1,0 +1,34 @@
+LS_OPTFLAGS:= -O3 -ffast-math -march=native -fomit-frame-pointer -fno-tree-vectorize
+LS_DEBUGFLAGS:= -g
+LS_OMPFLAGS:= -fopenmp
+LS_PROFILEFLAGS:= #-pg
+LS_STATICFLAGS:= #-static
+LS_PICFLAGS:= #-fPIC
+
+MOD= mod
+
+FC= ftn -std=gnu -fno-second-underscore
+FL= ftn -std=gnu -fno-second-underscore
+
+F_MODPATH= -I
+F_DEFINE= -D
+
+FWARNFLAGS= -Wall -Wextra -Wfatal-errors
+FCFLAGS= $(FWARNFLAGS) $(LS_PROFILEFLAGS) $(LS_DEBUGFLAGS) $(LS_OMPFLAGS) $(LS_PICFLAGS) $(LS_OPTFLAGS) -c -fimplicit-none
+FLFLAGS= -L. -L$(LIBDIR) $(LS_PROFILEFLAGS) $(LS_OMPFLAGS) $(LS_STATICFLAGS) $(LS_PICFLAGS) $(LS_OPTFLAGS)
+
+CC= cc
+CL= cc
+CWARNFLAGS= -Wall -Wextra -Wno-long-long -Wno-unknown-pragmas -Wshadow -Wmissing-prototypes -Wfatal-errors
+CCFLAGS_NO_C= -DUSE_MPI $(CWARNFLAGS) $(LS_PROFILEFLAGS) $(LS_DEBUGFLAGS) $(LS_OMPFLAGS) $(LS_PICFLAGS) $(LS_OPTFLAGS) -std=gnu99 -fno-strict-aliasing -pedantic
+CCFLAGS= $(CCFLAGS_NO_C) -c
+CLFLAGS= -L. -L$(LIBDIR) $(LS_PROFILEFLAGS) $(LS_OMPFLAGS) $(LS_STATICFLAGS) $(LS_PICFLAGS) $(LS_OPTFLAGS) -lm
+
+CXX= CC
+CXXL= CC
+CXXWARNFLAGS= -Wall -Wextra -Wstrict-aliasing=2 -Wundef -Wshadow -Wwrite-strings -Wredundant-decls -Woverloaded-virtual -Wcast-qual -Wcast-align -Wpointer-arith -Wold-style-cast -Wno-unknown-pragmas -Wfatal-errors
+CXXCFLAGS_NO_C= -DUSE_MPI $(CXXWARNFLAGS) $(LS_PROFILEFLAGS) $(LS_DEBUGFLAGS) $(LS_OMPFLAGS) $(LS_PICFLAGS) $(LS_OPTFLAGS) $(LS_MIXBINFLAGS) -ansi
+CXXCFLAGS= $(CXXCFLAGS_NO_C) -c
+CXXLFLAGS= -L. -L$(LIBDIR) $(LS_PROFILEFLAGS) $(LS_OMPFLAGS) $(LS_STATICFLAGS) $(LS_PICFLAGS) $(LS_OPTFLAGS) $(LS_MIXBINFLAGS)
+
+ARCREATE= ar cr

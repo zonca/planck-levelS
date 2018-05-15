@@ -1,0 +1,279 @@
+# Planck Level-S Focalplane Database
+# ==================================
+#
+# Compiled by Mark Ashdown (MAJA) <maja1@mrao.cam.ac.uk>
+#
+# 2009/03/27
+#
+  Version = 6.1
+#
+# Based on version 1.0 compiled by Bob Mann (RGM) <rgm@roe.ac.uk>,
+# in turn based on an original module by Ian Grivell (IJGR).
+#
+# with information from
+#  
+# Marco Bersanelli (MB) <marco@mi.iasf.cnr.it>
+# Daniele Mennella (DM) <daniele@mi.iasf.cnr.it>
+# Jean-Michel Lamarre (JML) <lamarre@ias.fr>
+# Michel Piat (MP) <piat@ias.fr>
+# Carlo Burigana (CB) <burigana@bo.iasf.cnr.it>
+# Vladimir Yurchenko (VY) <v.yurchenko@may.ie>
+# Simon Prunet (SP) <prunet@iap.fr>
+# 
+# References
+# ---------- 
+#
+# [1] "Planck/LFI: Main Beam Locations and Polarization Alignment for
+#     the LFI Baseline FPU" (PL-LFI-PST-TN-027, v1.0), M. Sandri and
+#     F. Villa, 2001/07. Communicated to MAJA by MB.
+#
+# [2] "HFI Instrument data for simulations" (version MIG 3.1), JML on
+#     behalf of the Instrument Working Group, 2003/07/31. Communicated
+#     to MAJA by JML.
+#  
+# [3] CB email to RGM, 2000/05/05.
+#
+# [4] MP email to RGM, 2000/05/09.
+#
+# [5] MB email to MAJA, 2003/07/24.
+#
+# [6] DM email to MAJA, 2003/07/24.
+#
+# [7] "Planck-LFI On-board data handling and compression", LFI instrument
+#     team, 1999/06/04.
+#
+# [8] HFI Proposal, Chapter 3.
+#
+# [9] "Gaussian Fitting Parameters of the ESA Planck HFI beams",
+#     V. Yurchenko, J. A. Murphy, J.-M. Lamarre and J. Brossard,
+#     preprint of paper to appear in Int. J. Infrared and Millimetre
+#     Waves (vol. 25, no. 5, 2004/04). Communicated to MAJA by VY.
+#
+# [10] "LFI Main beams at 30 GHz" (PL-LFI-PST-TN-040, v2.0), M. Sandri
+#      and F. Villa, 2005/02.
+#
+# [11] "LFI Main beams at 44 GHz" (PL-LFI-PST-TN-061, v1.0), M. Sandri
+#      and F. Villa, 2005/02.
+#
+# [12] "LFI Main beams at 70 GHz" (PL-LFI-PST-TN-062, v1.0), M. Sandri
+#      and F. Villa, 2005/02.
+#
+# [13] "Optical Effects (LFI)", F. Villa, presentation at the Planck
+#      HFI/LFI Consortia Meeting, Garching 26th-28th January, 2005
+#      (available in Livelink).
+#
+# [14] "A brief summary of HFI noise sensitivities: from NEPs to NETs",
+#      S. Prunet, 2005/01. Communicated to MAJA by SP.
+#
+# [15] P. Natoli email to T. Poutanen, 2005/04/01. Communicated to MAJA
+#      by T. Poutanen.
+#
+# Columns
+# -------
+#
+# (1) detector ID
+#
+#   LFI: detector IDs of the form LFI-xxS and LFI-xxM, where xx is the horn
+#        number in [1]. 100 GHz channel (horns 2-17) was removed.
+#
+#   HFI: detector IDs of the form xxx-yy where xxx is the band name and
+#        yy the horn number in that band. PSBs have a or b appended to the
+#        horn number (for example, 100-1a) [9].
+#
+# (2) phi_uv   / degrees
+# (3) theta_uv / degrees
+# (4) psi_uv   / degrees
+#
+#   These angles describe the position of the detectors in the focal plane.
+#   They give the rotation of the beam pattern from a fiducial orientation
+#   (forward beam direction (z-axis) pointing along the telescope line of
+#   sight, with y-axis aligned with the nominal scan direction) to their
+#   positions in the focal plane [1, 10, 11, 12]. HFI values from [9],
+#   converted to this coordinate system by MAJA.
+#
+# (5) psi_pol / degrees (angle of polarisation measurement)
+# (6) epsilon (degree of cross-polar leakage)
+#
+#   The polarisation angle psi_pol is defined with the beam in the fiducial
+#   orientation described above, that is, before rotation onto the detector
+#   position [9, 13]. The degree of cross-polar leakage would be 0.0 for an
+#   idealised polarised detector and 1.0 for an idealised unpolarised
+#   detector.
+#
+# (7) nu_cen / Hz (central frequency)
+# (8) nu_min / Hz (minimum frequency)
+# (9) nu_max / Hz (maximum frequency)
+#
+#   Top hat spectral response assumed for all detectors, with
+#   delta_nu/nu_cen = 0.2 for LFI [3], and delta_nu/nu_cen =
+#   0.33 for HFI [4].
+#
+# (10) f_knee / Hz (knee frequency)
+#
+#   LFI: 0.05 Hz for 30 GHz channel [15]. Adopted for all LFI channels
+#        until further information is available.
+#
+#   HFI: 0.03 Hz for all channels, worst case [2].
+#
+# (11) alpha (power law index for low-frequency noise)
+#
+#   LFI: alpha = 1.7 for 30 GHz channel [15]. Adopted for all LFI
+#        channels until further information is available.
+#
+#   HFI: alpha = 2.0 [2].
+# 
+# (12) f_min / Hz (cut-off frequency below which there are no
+#                     correlations in the noise)
+#
+#   LFI and HFI: arbitrarily set to 1.15e-5 Hz (approximately 1/(1 day))
+# 
+# (13) f_samp / Hz (frequency at which science data samples are produced)
+#
+#   LFI: 32.5 Hz at 30 GHz, 45.0 Hz at 44 GHz and 76.8 Hz at 70 GHz [6].
+#
+#   HFI: 200 Hz for all channels [2].
+#
+# (14) tau_bol / s (time constant for detector response)
+#
+#   LFI: 0.0 - instantaneous response for LFI detectors.
+#
+#   HFI: 7.8e-3 s for HFI 100GHz, 5.8e-3 s for 143GHz, 4.4e-3 s for
+#        217-857GHz [2].
+#
+# (15) tau_int / s (integration time for each output sample)
+#
+#   LFI: tau_integ = 1/f_samp [3]. Changed to reflect new sampling
+#        frequencies by MAJA in version 2.0. 
+#
+#   HFI: tau_integ = 1/f_samp [2].
+#
+# (16) n_read (number of "fast samples" per output sampling period)
+#
+#   LFI: 8 [7]. 
+#
+#   HFI: 32 [8]. Need to check this, because [2] has this as N/A.
+#
+# (17) fwhm_beam / arcmin (mean FWHM of beam)
+# (18) ellipticity (max FWHM / min FWHM)
+# (19) psi_ell / degrees (ellipse orientation)
+#
+#   Mean FWHM of the beam is calculated as the geometric mean of maximum
+#   and minimum FWHMs, fwhm_beam = sqrt(fwhm_max*fwhm_min). This is so
+#   that a circular beam with FWHM = fwhm_beam has the same area as the 
+#   elliptical beam.
+#
+#   psi_ell is the orientation of the beam major axis, defined in the
+#   fiducial orientatation described above, that is, before rotating by
+#   (phi_uv, theta_uv, psi_uv) onto its position in the focal plane.  
+#
+#   LFI: Values from [10, 11, 12].
+#
+#   HFI: Values from [9].
+#
+# (20) NET_RJ / K sqrt(s) (Noise equivalent temperature in Raleigh-Jeans units)
+#
+#   Unified noise measure introduced in version 3 of this database. To get the
+#   RMS of the noise per sample, this should be multiplied by sqrt(f_samp):
+#
+#   sigma = NET_RJ * sqrt(f_samp)
+#
+#   LFI: Antenna temperatures of (9.87, 14.18, 22.75) K at
+#        (30, 44, 70) GHz [6]. This is the sum of the system antenna
+#        temperature and the CMB antenna temperature (2.73K). Converted
+#        to NET_RJ by MAJA using formula:
+#
+#        NET_RJ = T_ann * sqrt(2/bandwidth)
+#
+#   HFI: NEPs from [2] converted to NET_RJ using formula given in [14]
+#        (without factor of 1+P):
+#
+#        NET_RJ = NEP * (1+P) / (2*sqrt(2)*k*n*bandwidth)
+#
+#        where P = 0, 1 for unpolarised and polarised detectors
+#        respectively, k is the Boltzmann constant and n is the number
+#        of modes (1 for the monomode channels 100-353 GHz, 4 for 545 GHz
+#        and 8 for 857 GHz).
+#
+# (21) SLDP_X  X component of sidelobe dipole vector, (dimensionless)
+# (22) SLDP_Y  Y component of sidelobe dipole vector, (dimensionless)
+# (23) SLDP_Z  Z component of sidelobe dipole vector, (dimensionless)
+#     
+#      The reference frame for the sidelobe dipole vector is the one defined
+#      by the three angles theta_uv, phi_uv, psi_uv for each detector. [16]
+#      LFI values from [16], based on 4 pi beams calculated by M. Sandri
+#      HFI values temporarily set to zero.
+#
+100-1a   -141.5330  1.8994  -90.0878 112.5000 0.0000 100.0e9  83.3e9 116.7e9 0.03 2.0 1.15e-5 200.0 7.80e-3  5.0e-3 32  9.6491  1.1582   11.2067 8.800e-5   0.000000   0.000000   0.000000
+100-1b   -141.5104  1.8998  -90.9968  22.5000 0.0000 100.0e9  83.3e9 116.7e9 0.03 2.0 1.15e-5 200.0 7.80e-3  5.0e-3 32  9.6432  1.1912   15.0427 8.800e-5   0.000000   0.000000   0.000000
+100-2a   -167.7324  1.8003  -91.1133 135.0000 0.0000 100.0e9  83.3e9 116.7e9 0.03 2.0 1.15e-5 200.0 7.80e-3  5.0e-3 32  9.6551  1.1544    0.6475 8.800e-5   0.000000   0.000000   0.000000
+100-2b   -167.7427  1.8010  -90.3994  45.0000 0.0000 100.0e9  83.3e9 116.7e9 0.03 2.0 1.15e-5 200.0 7.80e-3  5.0e-3 32  9.6262  1.1490    5.9453 8.800e-5   0.000000   0.000000   0.000000
+100-3a    167.7396  1.8010  -90.3452  90.0000 0.0000 100.0e9  83.3e9 116.7e9 0.03 2.0 1.15e-5 200.0 7.80e-3  5.0e-3 32  9.6313  1.1281    0.0000 8.800e-5   0.000000   0.000000   0.000000
+100-3b    167.7378  1.8011  -89.6008   0.0000 0.0000 100.0e9  83.3e9 116.7e9 0.03 2.0 1.15e-5 200.0 7.80e-3  5.0e-3 32  9.6431  1.1617   -3.0440 8.800e-5   0.000000   0.000000   0.000000
+100-4a    141.5259  1.8996  -89.5992  67.5000 0.0000 100.0e9  83.3e9 116.7e9 0.03 2.0 1.15e-5 200.0 7.80e-3  5.0e-3 32  9.6651  1.1533  -11.6036 8.800e-5   0.000000   0.000000   0.000000
+100-4b    141.5104  1.8998  -89.0031 157.5000 0.0000 100.0e9  83.3e9 116.7e9 0.03 2.0 1.15e-5 200.0 7.80e-3  5.0e-3 32  9.6438  1.1912  -15.0650 8.800e-5   0.000000   0.000000   0.000000
+143-1a    -48.6975  1.8152  -90.8900 135.0000 0.0000 143.0e9 119.2e9 166.8e9 0.03 2.0 1.15e-5 200.0 5.80e-3  5.0e-3 32  7.0508  1.0585   48.9319 5.329e-5   0.000000   0.000000   0.000000
+143-1b    -48.6981  1.8150  -89.2503  45.0000 0.0000 143.0e9 119.2e9 166.8e9 0.03 2.0 1.15e-5 200.0 5.80e-3  5.0e-3 32  7.0667  1.1089   46.2298 5.329e-5   0.000000   0.000000   0.000000
+143-2a    -24.5836  1.3465  -89.1450 135.0000 0.0000 143.0e9 119.2e9 166.8e9 0.03 2.0 1.15e-5 200.0 5.80e-3  5.0e-3 32  6.9862  1.0241   68.7113 5.329e-5   0.000000   0.000000   0.000000
+143-2b    -24.5788  1.3474  -89.5491  45.0000 0.0000 143.0e9 119.2e9 166.8e9 0.03 2.0 1.15e-5 200.0 5.80e-3  5.0e-3 32  6.9695  1.0692   56.2022 5.329e-5   0.000000   0.000000   0.000000
+143-3a     25.0383  1.3237  -89.4459  90.0000 0.0000 143.0e9 119.2e9 166.8e9 0.03 2.0 1.15e-5 200.0 5.80e-3  5.0e-3 32  6.9869  1.0533  -68.9327 5.329e-5   0.000000   0.000000   0.000000
+143-3b     25.0484  1.3243  -90.4489   0.0000 0.0000 143.0e9 119.2e9 166.8e9 0.03 2.0 1.15e-5 200.0 5.80e-3  5.0e-3 32  6.9772  1.0308  -38.0312 5.329e-5   0.000000   0.000000   0.000000
+143-4a     49.5255  1.8839  -90.3711  90.0000 0.0000 143.0e9 119.2e9 166.8e9 0.03 2.0 1.15e-5 200.0 5.80e-3  5.0e-3 32  7.0756  1.0931  -56.4746 5.329e-5   0.000000   0.000000   0.000000
+143-4b     49.5465  1.8841  -90.7711   0.0000 0.0000 143.0e9 119.2e9 166.8e9 0.03 2.0 1.15e-5 200.0 5.80e-3  5.0e-3 32  7.0892  1.0759  -38.9115 5.329e-5   0.000000   0.000000   0.000000
+143-5     -33.2329  2.0742  -91.4539   0.0000 1.0000 143.0e9 119.2e9 166.8e9 0.03 2.0 1.15e-5 200.0 5.80e-3  5.0e-3 32  7.3108  1.1664   60.1933 3.370e-5   0.000000   0.000000   0.000000
+143-6      -9.5895  1.7855  -89.0723   0.0000 1.0000 143.0e9 119.2e9 166.8e9 0.03 2.0 1.15e-5 200.0 5.80e-3  5.0e-3 32  7.2464  1.1107   81.2338 3.370e-5   0.000000   0.000000   0.000000
+143-7       9.7212  1.7611  -89.6811   0.0000 1.0000 143.0e9 119.2e9 166.8e9 0.03 2.0 1.15e-5 200.0 5.80e-3  5.0e-3 32  7.2368  1.1113  -78.6064 3.370e-5   0.000000   0.000000   0.000000
+143-8      32.8515  2.0941  -90.1783   0.0000 1.0000 143.0e9 119.2e9 166.8e9 0.03 2.0 1.15e-5 200.0 5.80e-3  5.0e-3 32  7.3742  1.1496  -60.4363 3.370e-5   0.000000   0.000000   0.000000
+217-1    -134.7711  1.3990  -89.5414   0.0000 1.0000 217.0e9 180.8e9 253.2e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.7263  1.1280   12.8744 3.041e-5   0.000000   0.000000   0.000000
+217-2    -161.8816  1.0093  -90.7004   0.0000 1.0000 217.0e9 180.8e9 253.2e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.7055  1.1184    4.0827 3.041e-5   0.000000   0.000000   0.000000
+217-3     162.3210  1.0331  -90.2807   0.0000 1.0000 217.0e9 180.8e9 253.2e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.7011  1.1302   -4.3018 3.041e-5   0.000000   0.000000   0.000000
+217-4     134.0357  1.3811  -89.6330   0.0000 1.0000 217.0e9 180.8e9 253.2e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.7247  1.1482  -13.3840 3.041e-5   0.000000   0.000000   0.000000
+217-5a   -111.6191  1.3139  -89.7511 135.0000 0.0000 217.0e9 180.8e9 253.2e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.7269  1.1114   21.0541 4.307e-5   0.000000   0.000000   0.000000
+217-5b   -111.6166  1.3137  -90.5394  45.0000 0.0000 217.0e9 180.8e9 253.2e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.7370  1.1165   19.4575 4.307e-5   0.000000   0.000000   0.000000
+217-6a   -130.2269  0.7089  -90.4651 135.0000 0.0000 217.0e9 180.8e9 253.2e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.7192  1.0955   11.4913 4.307e-5   0.000000   0.000000   0.000000
+217-6b   -130.2185  0.7091  -90.3907  45.0000 0.0000 217.0e9 180.8e9 253.2e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.7148  1.0904    7.9065 4.307e-5   0.000000   0.000000   0.000000
+217-7a    131.7249  0.7255  -90.3246  90.0000 0.0000 217.0e9 180.8e9 253.2e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.7123  1.0966   -8.8825 4.307e-5   0.000000   0.000000   0.000000
+217-7b    131.7354  0.7255  -89.5987   0.0000 0.0000 217.0e9 180.8e9 253.2e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.7116  1.0789   -8.8843 4.307e-5   0.000000   0.000000   0.000000
+217-8a    110.5930  1.3045  -89.5638  90.0000 0.0000 217.0e9 180.8e9 253.2e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.7438  1.1353  -19.9173 4.307e-5   0.000000   0.000000   0.000000
+217-8b    110.5930  1.3045  -89.4804   0.0000 0.0000 217.0e9 180.8e9 253.2e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.7442  1.1228  -21.1648 4.307e-5   0.000000   0.000000   0.000000
+353-1     -89.4780  2.0552  -90.2047   0.0000 1.0000 353.0e9 294.2e9 411.8e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.5781  1.2648   20.0845 2.124e-5   0.000000   0.000000   0.000000
+353-2     -88.1479  1.4147  -90.0769   0.0000 1.0000 353.0e9 294.2e9 411.8e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.5025  1.1617   20.6846 2.124e-5   0.000000   0.000000   0.000000
+353-3a    -88.5553  0.8214  -90.0507 135.0000 0.0000 353.0e9 294.2e9 411.8e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.4711  1.1746   27.5055 3.002e-5   0.000000   0.000000   0.000000
+353-3b    -88.5417  0.8214  -90.0505  45.0000 0.0000 353.0e9 294.2e9 411.8e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.4776  1.0968    0.8876 3.002e-5   0.000000   0.000000   0.000000
+353-4a    -77.6040  0.2140  -89.9728 135.0000 0.0000 353.0e9 294.2e9 411.8e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.4909  1.1012   27.1548 3.002e-5   0.000000   0.000000   0.000000
+353-4b    -77.5837  0.2158  -89.9734  45.0000 0.0000 353.0e9 294.2e9 411.8e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.4934  1.0795  -21.7530 3.002e-5   0.000000   0.000000   0.000000
+353-5a     86.6818  0.3680  -89.9467  90.0000 0.0000 353.0e9 294.2e9 411.8e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.4923  1.1367   -4.8728 3.002e-5   0.000000   0.000000   0.000000
+353-5b     86.6965  0.3674  -89.9889   0.0000 0.0000 353.0e9 294.2e9 411.8e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.4831  1.0259  -45.3774 3.002e-5   0.000000   0.000000   0.000000
+353-6a     87.2541  0.9625  -89.9620  90.0000 0.0000 353.0e9 294.2e9 411.8e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.4549  1.1777  -14.6236 3.002e-5   0.000000   0.000000   0.000000
+353-6b     87.2719  0.9625  -89.9617   0.0000 0.0000 353.0e9 294.2e9 411.8e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.5360  1.0828  -29.3738 3.002e-5   0.000000   0.000000   0.000000
+353-7      89.2129  1.5183  -89.8905   0.0000 1.0000 353.0e9 294.2e9 411.8e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.5274  1.1678  -19.7471 2.124e-5   0.000000   0.000000   0.000000
+353-8      88.7671  2.0555  -89.8680   0.0000 1.0000 353.0e9 294.2e9 411.8e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.5704  1.2515  -22.1910 2.124e-5   0.000000   0.000000   0.000000
+545-1     -75.3744  2.1308  -90.7539   0.0000 1.0000 545.0e9 454.3e9 635.8e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.2239  1.1954   33.5781 1.095e-5   0.000000   0.000000   0.000000
+545-2     -68.1972  1.5297  -89.5933   0.0000 1.0000 545.0e9 454.3e9 635.8e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  3.8514  1.2464   30.0005 1.095e-5   0.000000   0.000000   0.000000
+545-3      70.4151  1.6152  -89.3423   0.0000 1.0000 545.0e9 454.3e9 635.8e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  3.9373  1.1067  -32.3890 1.095e-5   0.000000   0.000000   0.000000
+545-4      74.7297  2.1372  -90.3269   0.0000 1.0000 545.0e9 454.3e9 635.8e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.2413  1.1605  -37.8301 1.095e-5   0.000000   0.000000   0.000000
+857-1     -57.2537  0.9982  -90.6050   0.0000 1.0000 857.0e9 714.2e9 999.9e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.3246  1.0982   58.3461 5.080e-6   0.000000   0.000000   0.000000
+857-2     -21.9841  0.6085  -89.5498   0.0000 1.0000 857.0e9 714.2e9 999.9e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.2908  1.0132   86.0246 5.080e-6   0.000000   0.000000   0.000000
+857-3      32.9765  0.6438  -89.7657   0.0000 1.0000 857.0e9 714.2e9 999.9e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.2869  1.0514  -71.9764 5.080e-6   0.000000   0.000000   0.000000
+857-4      59.5786  1.1150  -90.2153   0.0000 1.0000 857.0e9 714.2e9 999.9e9 0.03 2.0 1.15e-5 200.0 4.40e-3  5.0e-3 32  4.3449  1.0936  -58.0198 5.080e-6   0.000000   0.000000   0.000000
+LFI-18S  -131.8147  3.2975   22.3000  -0.1    0.0000  70.0e9  63.0e9  77.0e9 0.05 1.7 1.15e-5  76.8 0.0e0   13.0e-3  8 13.0328  1.2601   86.6400 2.719e-4   0.002813  -0.000797  -0.002583
+LFI-18M  -131.8147  3.2975   22.3000 -89.8    0.0000  70.0e9  63.0e9  77.0e9 0.05 1.7 1.15e-5  76.8 0.0e0   13.0e-3  8 12.9916  1.2184   86.0800 2.719e-4   0.002209  -0.000695  -0.002208
+LFI-19S  -150.8570  3.1750   22.4000   0.0    0.0000  70.0e9  63.0e9  77.0e9 0.05 1.7 1.15e-5  76.8 0.0e0   13.0e-3  8 12.7053  1.2509   79.4200 2.719e-4   0.003770  -0.000964  -0.003233
+LFI-19M  -150.8570  3.1750   22.4000 -90.0    0.0000  70.0e9  63.0e9  77.0e9 0.05 1.7 1.15e-5  76.8 0.0e0   13.0e-3  8 12.6494  1.2162   77.9400 2.719e-4   0.002988  -0.001035  -0.002814
+LFI-20S  -168.4438  3.1649   22.4000   0.0    0.0000  70.0e9  63.0e9  77.0e9 0.05 1.7 1.15e-5  76.8 0.0e0   13.0e-3  8 12.4795  1.2460   73.0500 2.719e-4   0.003653  -0.001322  -0.003373
+LFI-20M  -168.4438  3.1649   22.4000  89.9    0.0000  70.0e9  63.0e9  77.0e9 0.05 1.7 1.15e-5  76.8 0.0e0   13.0e-3  8 12.4273  1.2224   71.2800 2.719e-4   0.003344  -0.001270  -0.003222
+LFI-21S   168.4438  3.1649  -22.4000   0.0    0.0000  70.0e9  63.0e9  77.0e9 0.05 1.7 1.15e-5  76.8 0.0e0   13.0e-3  8 12.4795  1.2460  106.9500 2.719e-4   0.003639   0.001319  -0.003361
+LFI-21M   168.4438  3.1649  -22.4000 -89.9    0.0000  70.0e9  63.0e9  77.0e9 0.05 1.7 1.15e-5  76.8 0.0e0   13.0e-3  8 12.4273  1.2224  108.7200 2.719e-4   0.003324   0.001268  -0.003207
+LFI-22S   150.8570  3.1747  -22.4000   0.0    0.0000  70.0e9  63.0e9  77.0e9 0.05 1.7 1.15e-5  76.8 0.0e0   13.0e-3  8 12.7053  1.2509  100.5800 2.719e-4   0.003770   0.000964  -0.003233
+LFI-22M   150.8570  3.1747  -22.4000  90.0    0.0000  70.0e9  63.0e9  77.0e9 0.05 1.7 1.15e-5  76.8 0.0e0   13.0e-3  8 12.6494  1.2162  102.0600 2.719e-4   0.002988   0.001035  -0.002814
+LFI-23S   131.8147  3.2975  -22.3000   0.1    0.0000  70.0e9  63.0e9  77.0e9 0.05 1.7 1.15e-5  76.8 0.0e0   13.0e-3  8 13.0328  1.2601   93.3600 2.719e-4   0.002813   0.000797  -0.002583
+LFI-23M   131.8147  3.2975  -22.3000  89.8    0.0000  70.0e9  63.0e9  77.0e9 0.05 1.7 1.15e-5  76.8 0.0e0   13.0e-3  8 12.9916  1.2184   93.9200 2.719e-4   0.002209   0.000695  -0.002208
+LFI-24S   180.0000  4.0536    0.0000   0.0    0.0000  44.0e9  39.6e9  48.4e9 0.05 1.7 1.15e-5  45.0 0.0e0   22.2e-3  8 22.4336  1.3114   90.0000 2.138e-4   0.000733  -0.000001  -0.000601
+LFI-24M   180.0000  4.0536    0.0000  90.0    0.0000  44.0e9  39.6e9  48.4e9 0.05 1.7 1.15e-5  45.0 0.0e0   22.2e-3  8 22.5347  1.3704   90.0000 2.138e-4   0.000980  -0.000001  -0.000842
+LFI-25S    61.1350  5.0186 -113.5000   0.5    0.0000  44.0e9  39.6e9  48.4e9 0.05 1.7 1.15e-5  45.0 0.0e0   22.2e-3  8 29.6208  1.2053  113.0400 2.138e-4  -0.000213   0.000387  -0.000352
+LFI-25M    61.1350  5.0186 -113.5000  89.7    0.0000  44.0e9  39.6e9  48.4e9 0.05 1.7 1.15e-5  45.0 0.0e0   22.2e-3  8 28.7201  1.2508  109.7000 2.138e-4  -0.000238   0.000597  -0.000517
+LFI-26S   -61.1350  5.0186  113.5000  -0.5    0.0000  44.0e9  39.6e9  48.4e9 0.05 1.7 1.15e-5  45.0 0.0e0   22.2e-3  8 29.6208  1.2053   66.9600 2.138e-4  -0.000213  -0.000387  -0.000352
+LFI-26M   -61.1350  5.0186  113.5000 -89.7    0.0000  44.0e9  39.6e9  48.4e9 0.05 1.7 1.15e-5  45.0 0.0e0   22.2e-3  8 28.7201  1.2508   70.3000 2.138e-4  -0.000238  -0.000597  -0.000517
+LFI-27S   153.6074  4.3466  -22.5000   0.2    0.0000  30.0e9  27.0e9  33.0e9 0.05 1.7 1.15e-5  32.5 0.0e0   30.8e-3  8 32.2352  1.3562  101.6800 1.802e-4   0.003400   0.001420  -0.002925
+LFI-27M   153.6074  4.3466  -22.5000  89.9    0.0000  30.0e9  27.0e9  33.0e9 0.05 1.7 1.15e-5  32.5 0.0e0   30.8e-3  8 32.1377  1.3929  100.8900 1.802e-4   0.003445   0.001436  -0.003090
+LFI-28S  -153.6074  4.3466   22.5000  -0.2    0.0000  30.0e9  27.0e9  33.0e9 0.05 1.7 1.15e-5  32.5 0.0e0   30.8e-3  8 32.2352  1.3562   78.3200 1.802e-4   0.003403  -0.001421  -0.002928
+LFI-28M  -153.6074  4.3466   22.5000 -89.9    0.0000  30.0e9  27.0e9  33.0e9 0.05 1.7 1.15e-5  32.5 0.0e0   30.8e-3  8 32.1377  1.3929   79.1100 1.802e-4   0.003441  -0.001435  -0.003086

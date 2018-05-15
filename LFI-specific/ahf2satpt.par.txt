@@ -1,0 +1,15 @@
+Parameters read by ahf2satpt:
+
+input_list (string):
+  name of the input text file containing a list of AHF object names to read
+
+outfile (string):
+  name of the output object (DDL type "sat.LS_satpoint_real")
+
+outfile_wobble (string, default=""):
+  if not empty, name of the output object containing tilt angle information
+  (DDL type "sat.LS_tiltAngles")
+
+first_period_number (int, default=1):
+  number used for the first pointing period in the output file
+  (this can be used to synchronize numbers with LFI)

@@ -1,0 +1,43 @@
+LS_OPTFLAGS:= -O3 -ffast-math -march=native -fomit-frame-pointer -fno-tree-vectorize
+LS_DEBUGFLAGS:= -g
+LS_OMPFLAGS:= -fopenmp
+LS_PROFILEFLAGS:= #-pg
+LS_STATICFLAGS:= #-static
+LS_PICFLAGS:= #-fPIC
+LS_MIXBINFLAGS:= -DMIXBIN_SUPPORTED
+
+#EXTERNAL_CFITSIO=yes
+#FITSDIR=/usr
+#CFITSIO_EXT_INC=-I$(FITSDIR)/include
+#CFITSIO_EXT_LIB=-L$(FITSDIR)/lib -lcfitsio
+
+MOD= mod
+MIXBIN_SUPPORTED=yes
+
+FC= gfortran -std=gnu -fno-second-underscore
+FL= gfortran -std=gnu -fno-second-underscore
+
+F_MODPATH= -I
+F_DEFINE= -D
+
+FWARNFLAGS= -Wall -Wextra -Wfatal-errors
+FCFLAGS= $(FWARNFLAGS) $(LS_PROFILEFLAGS) $(LS_DEBUGFLAGS) $(LS_OMPFLAGS) $(LS_PICFLAGS) $(LS_OPTFLAGS) -c -fimplicit-none -fdata-sections -ffunction-sections
+FLFLAGS= -L. -L$(LIBDIR) $(LS_PROFILEFLAGS) $(LS_OMPFLAGS) $(LS_STATICFLAGS) $(LS_PICFLAGS) $(LS_OPTFLAGS) -Wl,--gc-sections
+
+CC= gcc
+CL= gcc
+CWARNFLAGS= -Wall -Wextra -Wno-long-long -Wno-unknown-pragmas -Wshadow -Wmissing-prototypes -Wfatal-errors
+CCFLAGS_NO_C= $(CWARNFLAGS) $(LS_PROFILEFLAGS) $(LS_DEBUGFLAGS) $(LS_OMPFLAGS) $(LS_PICFLAGS) $(LS_OPTFLAGS) -std=gnu99 -fno-strict-aliasing -pedantic -fdata-sections -ffunction-sections
+CCFLAGS= $(CCFLAGS_NO_C) -c
+CLFLAGS= -L. -L$(LIBDIR) $(LS_PROFILEFLAGS) $(LS_OMPFLAGS) $(LS_STATICFLAGS) $(LS_PICFLAGS) $(LS_OPTFLAGS) -Wl,--gc-sections -lm
+
+CXX= g++
+CXXL= g++
+CXXWARNFLAGS= -Wall -Wextra -Wstrict-aliasing=2 -Wundef -Wshadow -Wwrite-strings -Wredundant-decls -Woverloaded-virtual -Wcast-qual -Wcast-align -Wpointer-arith -Wold-style-cast -Wno-unknown-pragmas -Wfatal-errors
+CXXCFLAGS_NO_C= $(CXXWARNFLAGS) $(LS_PROFILEFLAGS) $(LS_DEBUGFLAGS) $(LS_OMPFLAGS) $(LS_PICFLAGS) $(LS_OPTFLAGS) $(LS_MIXBINFLAGS) -ansi -fdata-sections -ffunction-sections
+CXXCFLAGS= $(CXXCFLAGS_NO_C) -c
+CXXLFLAGS= -L. -L$(LIBDIR) $(LS_PROFILEFLAGS) $(LS_OMPFLAGS) $(LS_STATICFLAGS) $(LS_PICFLAGS) $(LS_OPTFLAGS) -Wl,--gc-sections
+
+ARCREATE= ar cr
+
+MIX_EXTRALIBS=-lgfortran

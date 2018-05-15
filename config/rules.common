@@ -1,0 +1,83 @@
+ifeq ($(DMC),TOODI)
+# for backwards compatibility
+  ifeq ($(TOODI_JWBUILD),)
+    TOODI_JWBUILD:=$(TOODI_JW)
+  endif
+  FCFLAGS+= $(F_MODPATH)$(TOODI_JWBUILD) $(F_DEFINE)USE_TOODI
+  F_EXTRALIBS+= -L$(TOODI_JWBUILD) $(TOODI_JWBUILD)/cllio.o -ljwrapper -L$(JW_LIB)/client -L$(JW_LIB)/server -L$(JW_LIB)/native_threads -L$(JW_LIB) -ljvm
+  CXXCFLAGS_NO_C+= -I$(TOODI_JW) -I$(TOODI_JW)/SOURCES -DUSE_TOODI
+  CXX_EXTRALIBS+= -L$(TOODI_JWBUILD) -ljwrapper -L$(JW_LIB)/client -L$(JW_LIB)/server -L$(JW_LIB)/native_threads -L$(JW_LIB) -ljvm
+else
+  ifeq ($(DMC), HFIDMC)
+    FCFLAGS+= -I $(DMCLIB_PATH) -I $(LLIO_PATH)/$(CMTBIN) $(F_DEFINE)USE_HFIDMC
+    F_EXTRALIBS+= -L$(DMC_PATH)/$(CMTBIN) -L$(LLIO_PATH)/$(CMTBIN)  -L$(PSQLDIR_lib) -L$(BDB_PATH)/lib -L$(SQLLITE_lib) -L$(TFDIR_lib) -lllio -lllio_f90  -lpq  -ldmc -lxml2 -lz -lsqlite -ltransfunc
+    CXXCFLAGS_NO_C+= -DUSE_HFIDMC -I$(SQLLITE_inc) -I$(PSQLDIR_inc)/server -I$(PSQLDIR_inc) -I$(DMC_PATH) -I$(LLIO_PATH)
+    CXX_EXTRALIBS+= -L$(DMC_PATH)/${CMTCONFIG}  -L$(LLIO_PATH)/$(CMTBIN) -L$(SQLLITE_lib)    -L$(PSQLDIR_lib) -L$(TFDIR_lib) -lpq -ldmc -lxml2 -lz -lllio -ldl -lsqlite    -ltransfunc 
+  else
+    ifeq ($(DMC), )
+    else
+      DMC:=$(error Variable DMC set, but not to a recognised value.)UNDEFINED
+    endif
+  endif
+endif
+
+BLDROOT = $(SRCROOT)/build.$(LEVELS_TARGET)$(LEVELS_MODE)
+PREFIX  = $(SRCROOT)/$(LEVELS_TARGET)$(LEVELS_MODE)
+BINDIR	= $(PREFIX)/bin
+INCDIR	= $(PREFIX)/include
+LIBDIR	= $(PREFIX)/lib
+DOCDIR	= $(SRCROOT)/doc
+
+# do not use any suffix rules
+.SUFFIXES:
+# do not use any default rules
+.DEFAULT:
+
+CCFLAGS+= -DLEVELS_TARGET=\"$(LEVELS_TARGET)\"
+CXXCFLAGS+= -DLEVELS_TARGET=\"$(LEVELS_TARGET)\"
+FCFLAGS+= $(F_DEFINE)LEVELS_TARGET=\"$(LEVELS_TARGET)\"
+
+$(BLDROOT)/%.o : $(SRCROOT)/%.F90
+	@echo "#  compiling $*.F90"
+	cd $(@D) && $(FC) $(F_MODPATH). $(FULL_INCLUDE_F) $(F_MODPATH)$(BLDROOT) $(F_DEFINE)LEVELS $(FCFLAGS) $<
+
+$(BLDROOT)/%.o : $(SRCROOT)/%.f90
+	@echo "#  compiling $*.f90"
+	cd $(@D) && $(FC) $(F_MODPATH). $(FULL_INCLUDE_F) $(F_MODPATH)$(BLDROOT) $(FCFLAGS) $<
+
+$(BLDROOT)/%.o : $(SRCROOT)/%.c
+	@echo "#  compiling $*.c"
+	cd $(@D) && $(CC) $(FULL_INCLUDE) -I$(BLDROOT) $(CCFLAGS) $<
+
+$(BLDROOT)/%.o : $(SRCROOT)/%.cc
+	@echo "#  compiling $*.cc"
+	cd $(@D) && $(CXX) $(FULL_INCLUDE) -I$(BLDROOT) $(CXXCFLAGS) $<
+
+%_mkdir:
+	@if [ ! -d $* ]; then mkdir -p $* ; fi
+
+distclean:
+	rm -rf $(BLDROOT) $(PREFIX) $(DOCDIR)
+
+dump_config: $(PREFIX)_mkdir FORCE
+	@echo "#  dumping configuration info"
+	@echo -e "  Fortran compilation:\n" \
+	      "$(FC) <includes> $(F_DEFINE)LEVELS $(FCFLAGS)\n\n" \
+	      "  C compilation:\n" \
+	      "$(CC) <includes> $(CCFLAGS)\n\n" \
+	      "  C++ compilation:\n" \
+	      "$(CXX) <includes> $(CXXCFLAGS)\n\n" \
+	      "  Library creation:\n" \
+	      "$(ARCREATE)\n\n" \
+	      "  Fortran linking:\n" \
+	      "$(FL) $(FLFLAGS) -o ... $(F_EXTRALIBS)\n\n" \
+	      "  C++ linking:\n" \
+	      "$(CXXL) $(CXXLFLAGS) -o ... $(CXX_EXTRALIBS)\n\n" \
+	      "  C++/Fortran linking:\n" \
+	      "$(CXXL) $(CXXLFLAGS) -o $@ $^ $(CXX_EXTRALIBS) $(F_EXTRALIBS) $(MIX_EXTRALIBS)\n\n" \
+	      "  Fortran include paths:\n" \
+	      "$(F_MODPATH). $(FULL_INCLUDE_F) $(F_MODPATH)$(BLDROOT)\n\n" \
+	      "  C/C++ include paths:\n" \
+	      "$(FULL_INCLUDE) -I$(BLDROOT)" > $(PREFIX)/configuration
+
+FORCE:

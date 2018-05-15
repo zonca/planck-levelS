@@ -1,0 +1,18 @@
+The files in this directory are a modified version of the CAMB code, originally
+written by Antony Lewis and Anthony Challinor. The modifications for the Planck
+simulation package were made by Martin Reinecke.
+
+The original, unmodified CAMB code is available at http://camb.info
+
+The modified CAMB code (consisting in the source files in this directory)
+is distributed under the following licensing terms:
+
+  Licence
+
+  You are licensed to use this software free of charge on condition that:
+
+    - Any publication using results of the code must be submitted to arXiv at
+      the same time as, or before, submitting to a journal. arXiv must be
+      updated with a version equivalent to that accepted by the journal on
+      journal acceptance.
+    - If you identify any bugs you report them as soon as confirmed.

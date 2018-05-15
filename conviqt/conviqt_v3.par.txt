@@ -1,0 +1,38 @@
+Parameters read by conviqt_v3:
+
+fwhm_deconv (real, default=0):
+  deconvolution FWHM in arc minutes.
+  If the input map is smoothed, set fwhm_deconv to the FWHM of the smoothing
+  beam, else set to 0.
+
+polarisation (bool, default=true):
+  whether the G and C components are also convolved and added to T
+
+conv_lmax (integer):
+  maximum l fo the convolution
+
+lmax_out (integer, default=conv_lmax):
+  used to determine the resolution of the generated ring set. It will have
+  2*lmax_out+1 pixels in phi-direction.
+
+nphi (integer, default=2*lmax_out+1):
+  used to determine the resolution of the generated ring set. It will have
+  nphi pixels in phi-direction.
+
+ntheta (integer, default=lmax_out+2):
+  used to determine the theta resolution of the generated ring set. It will have
+  ntheta rings in theta-direction (including theta=0 and theta=pi).
+  (NB: additional rings will be automatically computed for interpolation
+  purposes.)
+
+beam_alm (string):
+  input file containing the beam a_lm
+
+beammmax (integer):
+  maximum m of the beam
+
+sky_alm (string):
+  input file containing the sky a_lm
+
+ringset (string):
+  output file name for the ring set

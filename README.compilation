@@ -1,0 +1,37 @@
+To compile the packages, first check out the complete
+simulations tree (i.e. everything below planck/LevelS/).
+Then set the environment variable LEVELS_TARGET to the
+target for which you want to compile (e.g. linux_gcc,
+sunos64 etc.). For each possible target there exists a
+configuration file with the name config.$LEVELS_TARGET in
+the directory planck/LevelS/config/.
+At MPA, the target "linux_gcc" should be used.
+If no proper configuration file for your site exists, you can
+try to adapt one of the existing files, or ask your system
+administrator for help.
+
+If you want to compile LevelS with DMC support, please set the
+environment variable DMC to either "TOODI" or "HFIDMC", depending
+on which implementation you want to use. Please note that your
+environment must be properly set up for your DMC before "make"
+is executed. For MPADMC this means that the file "envNative.[c]sh"
+must have been sourced.
+
+After setting LEVELS_TARGET (and possibly DMC), just cd to
+planck/LevelS and type "make" (if this gives you an error
+message, try "gmake"); all packages required for the test
+pipeline should be built.
+
+To remove a whole build for a given target, use
+  (g)make distclean
+from planck/LevelS.
+
+Please note that all temporary and object files are created
+separately from the source files in a directory called
+"build.$LEVELS_TARGET". This allows simultaneous compilations
+on different platforms.
+
+Documentation can be created by the command "(g)make doc".
+However this requires the applications pdflatex and doxygen
+to be installed.
+The documentation will be created in planck/LevelS/doc/.

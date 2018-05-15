@@ -1,0 +1,26 @@
+Parameters read by alm2grid:
+
+nlmax (integer):
+  maximum order of l
+
+nmmax (integer):
+  maximum order of m (must not be larger than nlmax, default=nlmax)
+
+infile (string):
+  input file containing the a_lm
+
+outfile (string):
+  output file name for the grid
+
+ntheta (integer):
+  number of pixels in theta-direction
+
+nphi (integer):
+  number of pixels in phi-direction
+
+thetamax (double):
+  maximum colatitude (in degrees)
+
+polarisation (bool, default=false):
+  if false, only the intensity beam is generated
+  if true, I, Q and U beams are generated

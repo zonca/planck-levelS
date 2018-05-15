@@ -1,0 +1,309 @@
+Parameters read by multimod:
+
+focalplane_db (string):
+  input file containing the detector database
+
+detector_id (string):
+  name of the detector
+
+nominal_pointing (bool):
+  Determines whether nominal (idealized) pointing is used.
+
+bypass_sampler (bool, default=false):
+  if true, the effect of the sampling electronics is not simulated
+
+if (bypass_sampler==false)
+  sampler_timeshift (real, default=0):
+    number of samples (measured at the nominal detector sampling frequency),
+    by which the sampled output signal will be shifted.
+    (For LFI, a value of 0.5 will compensate the time lag caused by the
+    integration mechanism.)
+endif
+
+satinfo_type (string, default="SIMMISSION"):
+  can have the values "SIMMISSION", "LFI", and "HFI"
+
+satinfo_ephemeris (string):
+  object containing the ephemeris of the Sun relative to Planck
+
+if (satinfo_type==SIMMISSION)
+  sat_info (string):
+    Name of the input file (produced by simmission) containing the satellite
+    orientation. NOTE: the satellite position will be ignored!
+else if (satinfo_type==LFI)
+  satinfo_input (string):
+    Name of the input object containing the full satellite pointing information
+  satinfo_sampleinfo (string):
+    object containing information about the time of the first sample and number
+    of samples for each pointing period
+else if (satinfo_type==HFI)
+  satinfo_quaternions (string):
+    Name of the input object containing satellite orientation quaternions.
+  satinfo_ctr (string):
+    Name of the input object containing the central time reference.
+  satinfo_indexobject (string):
+    Name of the input object containing start and end indices of the pointing
+    periods
+endif
+
+first_pointing (int):
+  number of the first pointing period to calculate. Default is 1,
+  which is also used when "-1" is given.
+
+last_pointing (int):
+  number of the last pointing period to calculate. Default is the last
+  period in the satellite information file, which is also used when "-1"
+  is given.
+
+oversampling_factor (double):
+  the ideal sky samples are taken at a rate of
+  "oversampling_factor*f_samp". If "bypass_sampler==true", this factor must be
+  exactly 1.
+
+cnt_file (string, default=""):
+  if not empty, coverage information for the detector pointings
+  is written to a file with this name.
+
+detpt_file (string, default=""):
+  if not empty, detector pointings are written to a file with this name.
+
+detpt_aberration (bool, default=false):
+  if true, detector pointings are corrected for aberration caused by
+  Planck's motion around the Solar System Barycenter
+
+if (detpt_file!=""):
+  single_precision_detpt (bool, false by default):
+    determines whether detector pointings are written in single or double
+    precision
+endif
+
+detpt_wcorr (bool, default=false):
+  if true, wobble correction is enabled
+
+if (detpt_wcorr=true):
+  wcorr_tilt_angles (string):
+    object containing the tilt angles for each pointing period
+endif
+
+detpt_ptcor (bool, default=false):
+  if true, PTCOR is enabled
+
+if (detpt_ptcor=true):
+  ptcor_file (string):
+    CSV-formatted file containing times and the respective pointing corrections
+endif
+
+map_file (string, default=""):
+  if not empty, the Healpix map containing the binned TOD is written
+  to a file with this name.
+
+if (cnt_file!="" || map_file!="")
+  nside (int):
+    nside parameter of the Healpix maps that are output by multimod.
+endif
+
+tod_file (string, default=""):
+  if not empty, the TOD is written to a file with this name.
+
+if (tod_file!="" || map_file!="")
+  calibrate_signal (bool):
+    if true, the TOD output is multiplied by 2/(1+epsilon), where epsilon is the
+    amount of cross-polar leakage.
+endif
+
+quaternions_file (string, default=""):
+  if not empty, the quaternions describing the satellite orientation are
+  written to a file with this name.
+
+timestamp_file (string, default=""):
+  if not empty, a timestamp for every sample of the TOD will be
+  written to a file with this name.
+
+index_file (string, default=""):
+  if not empty, the indices of the first and last sample of every pointing
+  period are written to a file with this name.
+
+sampinfo_file (string, default=""):
+  if not empty, pointing period information will be written to this file
+  (intended for use with binPID-related tools).
+
+repointing_flag_file (string, default=""):
+  if not empty, a flag timestream will be written to this object, which is true
+  during repointing manoeuvres, and fals otherwise. This only works if
+  nominal_pointing is false.
+
+if (repointing_flag_file != "")
+  repointing_rand_seed (integer, default=4711):
+    seed for the random number generator used to determine the lengths of
+    the repointing manoeuvres.
+endif
+
+source_mixed (bool, false by default):
+  determines whether the ring sets calculated by the totalconvolver are
+  used as input signal.
+
+if (source_mixed)
+  ringset (string):
+    File containing the input ringset (output of the total convolver).
+    The data in this file must be given in K(antenna).
+
+  output_type (string,default = SIGNAL):
+    I     : extract the I signal from the ring files
+    Q     : extract the Q Stokes parameter from the ring files
+    U     : extract the U Stokes parameter from the ring files
+    SIGNAL: extract the signal actually seen by the detector
+
+    NOTE: The modes I, Q, and U only produce useful output data for
+    ringsets produced with axisymmetric beams!
+
+  interpol_order (int, default=1):
+    the order of polynomial interpolation. This parameter must be positive,
+    odd, and smaller than 20.
+
+  interpol_galactic (bool, default=false):
+    if true, the ringset is expected to be in Galactic coordinates, else in
+    Ecliptic coordinates.
+    The multimod output will always be in Ecliptic coordinates.
+endif
+
+source_mixed2 (bool, false by default):
+  determines whether Healpix maps (which are smoothed with a circular beam
+  profile) are used as input.
+  NOTE: This facility has been added for special-purpose simulations only,
+        and should not be used in general!
+
+if (source_mixed2)
+  interpol2_map (string):
+    name of the input file containing the Healpix map.
+    The data in this file must be given in K(antenna).
+
+  interpol2_polarisation (bool, false by default):
+    if false, only the intensity map is read, else I, Q and U components
+    are read.
+
+  interpol2_galactic (bool, default=false):
+    if true, the map is expected to be in Galactic coordinates, else in
+    Ecliptic coordinates.
+    The multimod output will always be in Ecliptic coordinates.
+
+  interpol2_output_type (string,default = SIGNAL):
+    I     : return the I map value
+    Q     : return the Q map value
+    U     : return the U map value
+    SIGNAL: extract the signal actually seen by the detector
+endif
+
+source_dipole (bool, false by default):
+  determines whether the CMB dipole is used as input signal.
+
+source_fsldp (bool, false by default):
+  determines whether the dipole pickup of the far side lobes is used as
+  input signal.
+
+if (source_dipole||source_fsldp)
+  dipole_thermotemp (bool, false by default):
+    true : calculate thermodynamic temperature
+    false: calculate antenna temperature
+
+  dipole_speed (string,default="TOTAL")
+    motion used to calculate the dipole
+      SOLSYS   : use only the speed of the solar system relative to the CMB
+      SATELLITE: use only the speed of the satellite relative to the sun
+      TOTAL    : use the speed of the satellite relative to the CMB
+
+  dipole_type (int, 2 by default):
+    type of dipole component to calculate:
+      1: total relativistic Doppler effect (monopole plus relativistic Doppler
+         effect / "dipole anisotropy")
+      2: relativistic Doppler effect ("dipole anisotropy")
+      3: total non-relativistic Doppler effect (pure dipole plus monopole)
+      4: non-relativistic Doppler effect (pure dipole)
+      5: quadrupole component of relativistic Doppler effect
+      6: higher components of relativistic Doppler effect
+      7: relativistic component of the Doppler effect
+         (difference between relativistic and non-relativistic Doppler effect)
+
+  dip_norm (real, 1 by default):
+    factor applied to the computed dipole signal (handy to emulate
+    bandpass effects, for example)
+endif
+
+source_zle (bool, false by default):
+  determines whether the zle is used as input signal.
+
+if (source_zle)
+  zle_components(string):
+    integer list containing the desired components (possible choices are
+    1,2,11,12,13,20 and 30)
+  zle_ephemeris(string):
+    object containing the ephemeris of the Sun and the Solar system barycenter
+    relative to Planck
+endif
+
+source_oof (bool, false by default):
+  determines whether the 1/f-noise is used as input signal.
+
+if (source_oof)
+  oof_rand_seed (integer):
+    random number generator seed for the 1/f-noise
+
+  oof_mode (string, default=BOTH):
+    WHITE: simulate only white noise
+    OOF  : simulate only pure 1/f noise
+    BOTH : both of the above
+
+  oof_method (string, default=CLASSIC):
+    CLASSIC  : multiple SDEs, multiple random numers per sample
+    NEWNOISE : multiple SDEs, one random number per sample (experimental!)
+    OOF2NOISE: 1/f^2 generator by S. Plaszczynski
+               (works only if the slope is -2 and oof_mode==BOTH)
+    OOFANOISE: fast 1/f^alpha generator by S. Plaszczynski
+               (works only if oof_mode==BOTH)
+
+  oof_stationary_periods (integer, default=-1):
+    number of pointing periods after which the noise generator is reset
+    (i.e. the correlation is destroyed)
+    If this is <=0, no resets take place.
+
+  if (nominal_pointing)
+    oof_num_real (integer, default=60):
+      number of OOF realisations per pointing period with nominal pointing
+  endif
+endif
+
+source_pntsrc (bool, false by default):
+  determines whether the point source convolver is used as input signal.
+
+if (source_pntsrc)
+  pntsrc_polarisation (bool, default=false):
+    should polarised intensity be calculated?
+
+  pntsrc_file (string, default=""):
+    if not empty, input file containing the point source catalog
+
+  planet_file (string):
+    if not empty, object containing the planet ephemerides
+
+  beam_file_type (integer):
+    type of the beam:
+      2: Gaussian beam with fwhm given in the detector database
+      3: Elliptic Gauss beam with parameters given in the detector database
+      4: beam on an equidistant (theta,phi) grid, as produced by crosspol
+         or alm2grid
+      5: beam on an equidistant Cartesian grid (LFI main beams), as produced
+         by crosspol
+
+  if (beam_file_type==[4,5])
+    beam_file (string):
+      input file containing the beam
+  endif
+
+  beam_radius_max (real):
+    cutoff radius of the beam (in degrees)
+
+  psrchits_file (string, default=""):
+    if not empty, output file containing a list of encountered point sources
+
+  variable_pntsrc_factor (real, default=1):
+    factor to be applied to the signal of variable point sources
+endif

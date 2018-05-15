@@ -1,0 +1,194 @@
+\documentclass[pdf]{planckDoc}
+\usepackage{alltt}
+\usepackage{verbatim}
+
+\sloppy
+
+\begin{document}
+
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\tw}[1]{\texttt{#1}}
+
+\title{Compilation and Usage of the Planck Simulation Modules}
+\author{Martin Reinecke, Klaus Dolag}
+\authorised{no one}
+\date{\today}
+\docid{PL-COM-MPA-MA-SIM007}
+\docrv{unknown}
+\abstract{This document summarises how the modules for Planck data
+simulation can be compiled and used.}
+
+\frontpage
+
+\section{Simulation Code}
+
+\subsection{Obtaining the code}
+
+The simulation packages reside in the IDIS CVS respository
+at ESTEC. If you do not know how to get there, contact Martin Bremer
+(\tw{mbremer@rssd.esa.int}) for \tw{<username>}
+and the related password.
+
+{\bf Note:} It is not recommended to copy a CVS file tree from someone else,
+because CVS remembers the user who did the original checkout in the
+{\tt */CVS/Root} files. That means that the user who copied the files
+will not be able to update them or commit changes.
+
+To do an initial checkout of the LevelS sources you should issue the
+following commands:
+ \begin{verbatim}
+ setenv CVSROOT :pserver:<username>@cvs.rssd.esa.int:/services/repositories/PLANCK_CVS
+ (or export CVSROOT=:pserver:<username>@cvs.rssd.esa.int:/services/repositories/PLANCK_CVS)
+ cvs login
+ cvs co -P planck/LevelS
+ \end{verbatim}
+
+Please note that the local directory {\tt planck/LevelS} should not exist
+before the checkout.
+
+\subsection{Updating your version of the code}
+
+To update your copy of the source code, enter the directory \tw{planck/LevelS}
+and issue the command
+\begin{verbatim}
+cvs -q update -Pd
+\end{verbatim}
+
+\subsection{Compilation}
+
+In order to compile the code you will need following programs:
+\begin{itemize}
+   \item an up-to-date version of \tw{GNU make}. Parallel compilation is
+     supported for \tw{GNU make} 3.79 and later.
+   \item a \tw{C} compiler supporting the C90 standard.
+   \item a \tw{C++} compiler supporting the C++98 standard; this includes
+     \tw{g++} 3.0 and above and the compilers of SGI and IBM.
+   \item a Fortran 95 compiler with support for the Fortran 2003 module
+     \tw{iso\_c\_binding}. This includes \tw{GNU gfortran} 4.3 and above as well
+     as Intel \tw{ifort} 10.0 and above.
+\end{itemize}
+To compile the code, follow the instructions
+in \tw{planck/LevelS/README.compilation}.
+
+Note: in order to make use of hybrid C++/Fortran modules, it is required that
+the employed C++ and Fortran compilers come from the same ``vendor'', like
+\tw{g++/gfortran} or \tw{icpc/ifort}.
+
+\clearpage
+\section{Test Pipeline}
+
+\begin{itemize}
+
+\item To run the simulation, you will need the following items:
+   \begin{itemize}
+   \item Template maps and beam patterns. \\
+      In order to keep code and data separate, there are no template maps,
+      spectra or beam patterns included in the package.
+      An archive file containing all the data necessary for the test
+      pipeline can be downloaded from MPA's Planck web pages at\\
+      \href{http://planck.MPA-Garching.MPG.DE/SimData/test/testdata.tar.gz}
+        {http://planck.MPA-Garching.MPG.DE/SimData/test/testdata.tar.gz}.
+   \item \tw{xv} \\
+      The image viewer \tw{xv} is used only for displaying some
+      results. It is thus not strictly required.
+      If you prefer another image viewer, you can enter its name when
+      \tw{SetupSimulation} asks for it.
+   \end{itemize}
+
+\item Run the setup script \tw{planck/LevelS/SetupSimulation}.
+It will ask for the path containing the template data and module binaries,
+the name of your image viewer and several other simulation-specific
+parameters which are explained in chapter \ref{simparam}.
+
+\item The script creates the parameter files necessary for running the test
+pipeline and tells you how to start the simulation.
+
+If everything worked fine, the image viewer will show you
+the results of your test run. You can compare them with our sample run
+available on our web pages at\\
+\href{http://planck.MPA-Garching.MPG.DE/SimData/index_test.html}
+{http://planck.MPA-Garching.MPG.DE/SimData/index\_test.html}.
+
+\item Be aware that the \tw{Pipeline} script only offers
+a way for testing your self-compiled simulation packages and
+is thus only a very specialized simulation. If you want to produce
+\emph{real} data, you need to set the parameters of each step carefully
+according to the requirements of the simulation you want to run.
+
+\end{itemize}
+
+\clearpage
+\section{Simulation parameters}
+\label{simparam}
+
+\begin{itemize}
+
+\item \tw{NSIDE}
+
+The resolution of the output maps produced by the pipeline
+(i.e.~the \tw{HEALPix NSIDE} parameter).
+It has to be a power of 2 and should lie between 16 and 512.
+
+The sky is tesselated into $12\,N_\mathrm{side}^2$ pixels. This implies
+that the approximate side length of a HEALPix pixel is
+$$
+  \delta\theta\approx\sqrt{\frac{3}{\pi}}\,
+  \frac{3600}{N_\mathrm{side}}\;\hbox{arc minutes}\;.
+$$
+This gives a clue for the choice of $N_\mathrm{side}$ required by
+your simulation.
+
+\item \tw{LMAX}
+
+This quantity determines how accurately the ``synthetic skies'' are
+calculated, which are scanned by the detector later on.
+The \tw{LMAX} parameter should be twice to three times the value chosen
+for \tw{NSIDE}, up to a maximum of 2900. Note that the foreground maps
+distributed in \tw{testdata.tar.gz} only contain $a_{lm}$ up to
+$l_{\mathrm{max}}=1024$, so that a higher $l$ will not further improve the
+quality of the foreground signal.
+
+\item Detector name
+
+Depending on this, all characteristic quantities like detector frequency,
+sampling frequency, bandwidth, noise amplitudes, orientation relative to
+the optical axis etc.\ are determined from the focal plane database.
+If a simulation with special parameters is required, an additional detector
+with the desired parameters has to be added by hand to the database.
+
+\item First and last pointing period of the mission
+
+These parameters influence the sky coverage of the simulation and also the
+size of the output files. If unsure, leave them at the default of -1, which
+means that all pointing periods available in the input PPL file will be used.
+
+\item Nominal vs.\ realistic pointing
+
+If realistic pointing is chosen, detailed pointing information with
+synthesised pointing errors is created for each pointing period, and
+the sky is scanned 60 times instead of once per period.
+This will increase the overall running time by roughly a factor of 60
+and also require more storage space for intermediate data.
+
+\end{itemize}
+
+\clearpage
+\input{modules.tex}
+
+\appendix
+
+\clearpage
+\section{LevelS dataflow}
+\begin{figure}[h]
+  \begin{center}
+    \includegraphics[angle=0,height=0.8\textheight]{pipeline.pdf}
+  \end{center}
+  \caption{Schematic dataflow of a typical \emph{Planck} simulation pipeline.
+  Rectangular components denote data products, whereas elliptic
+  shapes represent modules.}
+\end{figure}
+
+\clearpage
+\input{focalplane_db.tex}
+
+\end{document}

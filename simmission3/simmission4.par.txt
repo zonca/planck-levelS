@@ -1,0 +1,128 @@
+# *****************************************************************************
+# simmission4
+# *****************************************************************************
+
+##############################################################################
+# EPHEMERIS DATA
+
+# object containing the HORIZON ephemerides of the Sun, where Planck is
+# the observer.
+# This object must be of DDL type "ephemeris.LS_ephemeris"
+ephemerides = /path/to/file
+
+##############################################################################
+# TECHNICAL PARAMETERS
+
+# Seeds for the random number generator
+randseed_1 = 1234
+randseed_2 = 5678
+
+##############################################################################
+# SATELLITE PARAMETERS
+
+# How the satellite dynamics are to be modelled (``ideal'' or ``analytical'').
+dynamics = analytical
+
+# Satellite centre-of-gravity (in m, relative to the centre of the Solar
+# panel, in coordinates parallel to the satellite reference system, with
+# the z-displacement ``into'' the satellite or away from the Sun, the
+# x-displacement in the direction of the focal plane and the y-displacement
+# perpendicular to this).
+pos_cog_sat_x = 0.03
+pos_cog_sat_y = 0
+pos_cog_sat_z = 0.93
+
+# Satellite inertia tensor (in kg m^2 in the satellite reference system
+# defined above). The off-diagonal elements I_xz = I_zx and I_yz = I_zy
+# are not zero in this reference frame, unlike the inertial reference
+# frame.
+i_sat_xx = 2236.5
+i_sat_yy = 2276.7
+i_sat_zz = 2650.3
+i_sat_xy = -98
+i_sat_xz = -0.1
+i_sat_yz = 0.7
+
+# Radius of the solar panel (in m).
+r_panel_sat = 2
+
+# Specular reflection coefficient of the satellite solar panel.
+specref_panel_sat = 0.17
+
+# Diffuse reflection coefficient of the satellite solar panel.
+diffrel_panel_sat = 0.1
+
+##############################################################################
+# POINTING PARAMETERS
+
+# The z-axis pointing mode, the default option being ``ideal'' (i.e.,
+# the satellite's z-axis is always ideal), the other option being
+# ``gaussian'' (i.e., there is a Gaussian error added to the nominal
+# pointing of mean error sigma_zaxis_x_pointing (in arcmin) about the
+# x-axis and sigma_zaxis_y_pointing (in arcmin) about the y-axis but
+# with a maximum value of delta_zaxis_max_x_pointing (in arcmin) about
+# the x-axis and delta_zaxis_max_y_pointing (in arcmin) about the
+# y-axis)
+mode_zaxis_pointing = gaussian
+
+# Mean error on the satellite pointing (in arcmin).
+sigma_zaxis_x_pointing = 0.2
+sigma_zaxis_y_pointing = 0.2
+
+# Maximum error on the satellite pointing (in arcmin).
+delta_zaxis_max_x_pointing = 1.0
+delta_zaxis_max_y_pointing = 1.0
+
+# The mode with which the initial scan phase of a pointing period is
+# determined, the default being ``ideal'' (in which case the satellite can
+# be thought of as happily rotating continuously about its z-axis, the
+# repointings notwithstanding) or ``random'' (in which case the scan
+# phase is, of course, random).
+mode_phase_pointing = random
+
+# The rotation rate error mode, ``ideal'' again being that the nominal
+# rotation rate is held to rigorously and ``gaussian'' results in
+# Gaussian errors on the rotation rate (of mean error
+# sigma_rate_rot_pointing and maximum error delta_rate_rot_max_pointing).
+mode_rate_rot_pointing = gaussian
+
+# Mean error on the satellite rotation rate [in deg s^(-1)].
+sigma_rate_rot_pointing = 0.0006
+
+# Maximum error on the satellite rotation rate [in deg s^(-1)].
+delta_rate_rot_max_pointing = 0.0012
+
+##############################################################################
+# SCAN STRATEGY PARAMETERS
+
+# File name of mission file.
+# This must be an ASCII file.
+scanfile = data/mission_test.dat
+
+# Format of the mission file.
+# This can be either "ppl" (default), "appls", or "plan".
+scandataformat = ppl
+
+# First pointing period to be processed.
+# If unset or set to -1, use the first period in the mission file.
+first_period=-1
+
+# Last pointing period to be processed.
+# If unset or set to -1, use the last period in the mission file.
+last_period=-1
+
+# Rotation period of the satellite (in min).
+period_rot_scan = 1.0
+
+##############################################################################
+# SIMULATION OUTPUTS
+
+# Filename for the mission output file containing all pointings.
+file_mission = satpoint_mission
+
+# Period between output times (in s)
+period_sm_mission = 1
+
+# Whether to perform a full mission simulation (i.e., whether to produce
+# pointing files and loop over the samples in a pointing at all).
+simulatepointings = N

@@ -1,0 +1,26 @@
+Parameters read by quantum:
+
+fnamein (string):
+  input toi.science.LFI_Data (un-differenced data) in ADU to be quantized
+
+fnameout (string):
+  output toi.science.LFI_Data (un-differenced data) in ADU after quantization
+  and reconstruction has been performed
+
+n_aver (int, default=1):
+  number of average of samples. If data come from LevelS or from TMH 
+  (LFI-L1) use default value
+
+offset (float):
+  offset to be applied to differenced data (with gmf1 and gmf2)
+
+quant (float):
+  quantization factor (in units of sigma of white noise)
+
+gmf1 (float):
+  On-board value of gain modulation factor to produce differenced
+  data to satisfy band-width constraints
+
+gmf2 (float):
+  The other on-board value of gain modulation factor to
+  produce differenced data.

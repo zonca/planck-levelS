@@ -1,0 +1,13 @@
+Parameters read by pointing_errors:
+
+infile (string):
+  input object containing satellite pointing quaternions.
+
+outfile (string):
+  output object containing the perturbed quaternions.
+
+rand_seed (integer):
+  random-number seed
+
+sigma (double):
+  RMS sigma of the perturbation (in radians)

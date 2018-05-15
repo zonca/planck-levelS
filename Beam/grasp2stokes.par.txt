@@ -1,0 +1,27 @@
+Parameters read by grasp2stokes:
+
+grasp_file (string):
+  Input Grasp (text) file.
+
+grasp_format (string):
+  Specifies sub-format of Grasp file.  Must be one of:
+    - "grd_square";
+    - "grd_polar";
+    - "cut".
+
+grasp_copol (string):
+  Specifes co-polar basis direction. Must be "x" or "y".
+
+grasp_norm (string):
+  Normalisation convention of the input Grasp beam.  Must be "unity",
+  "four_pi" or "eight_pi".  The value of this parameter is used to
+  re-normalise the output Stokes parameters correctly for internal
+  pipeline purposes.
+
+if (grasp_format == "grd_square")
+  stokes_file_square (string):
+    Output beam object in square format.
+else
+  stokes_file_polar (string):
+    Output beam object in polar format.
+endif

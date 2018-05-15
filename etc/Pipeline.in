@@ -1,0 +1,425 @@
+#!/bin/sh
+
+#                                 #
+# Demo script for Planck Pipeline #
+#                                 #
+
+BINPATH=_BINPATH_
+OUTPATH=_OUTPATH_
+SCRIPTPATH=_SCRIPTPATH_
+
+#camb
+rm -f ${OUTPATH}/cl.fits
+
+#syn_alm_cxx
+rm -f ${OUTPATH}/CMBSimul.alm
+
+#almmixer
+rm -f ${OUTPATH}/sky.alm
+
+#gaussbeampol
+rm -f ${OUTPATH}/beam.alm
+
+#conviqt_v3
+rm -f ${OUTPATH}/ringset.fits
+
+#ringset2map
+rm -f ${OUTPATH}/convolved_map*
+
+#simmission4
+rm -f ${OUTPATH}/satpoint.fits
+
+#multimod
+rm -f ${OUTPATH}/signal_s_* \
+      ${OUTPATH}/signal_i_* \
+      ${OUTPATH}/signal_q_* \
+      ${OUTPATH}/signal_u_* \
+      ${OUTPATH}/dipole_* \
+      ${OUTPATH}/oof_* \
+      ${OUTPATH}/pntsrc_* \
+      ${OUTPATH}/zle_*
+
+#alm2grid
+rm -f ${OUTPATH}/beam.fits
+
+#alm2map_cxx
+rm -f ${OUTPATH}/sky.fits
+
+#map2tga
+rm -f ${OUTPATH}/sky_?.tga
+
+FGHZ=`${BINPATH}/fpdbhelper _FPDB_ _DETECTOR_ freq_GHz`
+
+_PRECOMMAND_ ${BINPATH}/pntsrcmixer \
+  ncatalogs=1 \
+  response_type=DELTA \
+  focalplane_db=_FPDB_ \
+  detector_id=_DETECTOR_ \
+  output_catalog=_OUTPATH_/pntsrc_catalog2.fits \
+  colname_theta=theta_ecl \
+  colname_phi=phi_ecl \
+  colname_name=source_name \
+  catalog_1=_PIPE_PATH_/tab/pntsrc_catalog.fits \
+  colname_flux_1=flux_${FGHZ}GHz \
+  freq_1=${FGHZ}e9 && \
+_PRECOMMAND_ ${BINPATH}/camb \
+  get_scalar_cls=T \
+  get_vector_cls=F \
+  get_tensor_cls=F \
+  get_transfer=F \
+  do_lensing=F \
+  do_nonlinear=0 \
+  l_max_scalar=5000 \
+  k_eta_max_scalar=5500 \
+  l_max_tensor=5000 \
+  k_eta_max_tensor=5500 \
+  use_physical=F \
+  hubble=50 \
+  w=-1 \
+  cs2_lam=0 \
+  omega_baryon=0.05 \
+  omega_cdm=0.95 \
+  omega_lambda=0.0 \
+  omega_neutrino=0.0 \
+  temp_cmb=2.726 \
+  helium_fraction=0.24 \
+  massless_neutrinos=3.04 \
+  massive_neutrinos=0 \
+  nu_mass_eigenstates=1 \
+  nu_mass_degeneracies=0 \
+  nu_mass_fractions=1 \
+  initial_power_num=1 \
+  pivot_scalar=0.05 \
+  pivot_tensor=0.05 \
+  'scalar_amp(1)=2.1e-9' \
+  'scalar_spectral_index(1)=1' \
+  'scalar_nrun(1)=0' \
+  'tensor_spectral_index(1)=1' \
+  'initial_ratio(1)=1' \
+  reionization=F \
+  re_use_optical_depth=F \
+  re_optical_depth=0.00 \
+  re_redshift=50 \
+  re_delta_redshift=1.5 \
+  re_ionization_frac=0.2 \
+  RECFAST_fudge=1.14 \
+  RECFAST_fudge_He=0.86 \
+  RECFAST_Heswitch=6 \
+  RECFAST_Hswitch=T \
+  initial_condition=1 \
+  'initial_vector=-1 0 0 0 0' \
+  vector_mode=0 \
+  COBE_normalize=F \
+  CMB_outputscale=7.42835025e12 \
+  transfer_high_precision=F \
+  transfer_kmax=2 \
+  transfer_k_per_logint=5 \
+  transfer_num_redshifts=1 \
+  'transfer_redshift(1)=0' \
+  'transfer_filename(1)=transfer_out.dat' \
+  'transfer_matterpower(1)=matterpower.dat' \
+  FITS_filename=_OUTPATH_/cl.fits \
+  feedback_level=1 \
+  lensing_method=1 \
+  accurate_BB=F \
+  massive_nu_approx=1 \
+  accurate_polarization=T \
+  accurate_reionization=F \
+  do_tensor_neutrinos=F \
+  do_late_rad_truncation=T \
+  number_of_threads=0 \
+  accuracy_boost=1 \
+  l_accuracy_boost=1 \
+  l_sample_boost=1 \
+  derived_parameters=F \
+  highL_unlensed_cl_template=_PIPE_PATH_/tab/HighLExtrapTemplate_lenspotentialCls.dat \
+  && \
+_PRECOMMAND_ ${BINPATH}/syn_alm_cxx \
+  fwhm_arcmin=0 \
+  infile=_OUTPATH_/cl.fits \
+  rand_seed=1234 \
+  nlmax=_LMAX_ \
+  outfile=_OUTPATH_/CMBSimul.alm \
+  polarisation=true \
+  && \
+_PRECOMMAND_ ${BINPATH}/almmixer \
+  focalplane_db=_FPDB_ \
+  detector_id=_DETECTOR_ \
+  amx_lmax=_LMAX_ \
+  amx_output_map=_OUTPATH_/sky.alm \
+  amx_polar=true \
+  amx_monopole=true \
+  amx_nmaps=7 \
+  amx_response_type=TOPHAT \
+  amx_mapname1=_OUTPATH_/CMBSimul.alm \
+  amx_maptype1=CMB \
+  amx_mapname2=_PIPE_PATH_/Maps/galsyn_TGC.alm \
+  amx_maptype2=SYNCHRO \
+  amx_mapname3=_PIPE_PATH_/Maps/galdst.alm \
+  amx_maptype3=DUST2 \
+  amx_mapname4=_PIPE_PATH_/Maps/sz.alm \
+  amx_maptype4=SZ \
+  amx_mapname5=_PIPE_PATH_/Maps/szkin.alm \
+  amx_maptype5=SZKIN \
+  amx_mapname6=_PIPE_PATH_/Maps/H_alpha_ecl.alm \
+  amx_maptype6=FREEFREE \
+  amx_mapname7=_PIPE_PATH_/Maps/co_ecl.alm \
+  amx_maptype7=CO \
+  amx_co_temp7=20 \
+  && \
+_PRECOMMAND_ ${BINPATH}/alm2map_cxx \
+  nlmax=_LMAX_ \
+  infile=_OUTPATH_/sky.alm \
+  outfile=_OUTPATH_/sky.fits \
+  nside=_NSIDE_ \
+  polarisation=true \
+  fwhm_arcmin=_FWHM_ \
+  && \
+_PRECOMMAND_ ${BINPATH}/map2tga ${OUTPATH}/sky.fits \
+  ${OUTPATH}/sky_i.tga -sig I_Stokes -bar -xsz 1024 -title "Synthesized Sky Map (I-Stokes)" && \
+_PRECOMMAND_ ${BINPATH}/map2tga ${OUTPATH}/sky.fits \
+  ${OUTPATH}/sky_q.tga -sig Q_Stokes -bar -xsz 1024 -title "Synthesized Sky Map (Q-Stokes)" && \
+_PRECOMMAND_ ${BINPATH}/map2tga ${OUTPATH}/sky.fits \
+  ${OUTPATH}/sky_u.tga -sig U_Stokes -bar -xsz 1024 -title "Synthesized Sky Map (U-Stokes)" && \
+_PRECOMMAND_ ${BINPATH}/gaussbeampol \
+  focalplane_db=_FPDB_ \
+  detector_id=_DETECTOR_ \
+  beam_lmax=_LMAX_ \
+  beam_nstokes=3 \
+  beam_alm_file=_OUTPATH_/beam.alm \
+  beam_elliptic=F \
+  beam_mmax=2 \
+  && \
+_PRECOMMAND_ ${BINPATH}/alm2grid \
+  nlmax=_LMAX_ \
+  nmmax=2 \
+  infile=_OUTPATH_/beam.alm \
+  outfile=_OUTPATH_/beam.fits \
+  ntheta=_NSIDE_ \
+  nphi=_NSIDE_ \
+  thetamax=1.5 \
+  polarisation=true \
+  && \
+_PRECOMMAND_ ${BINPATH}/conviqt_v3 \
+  fwhm_deconv=0 \
+  conv_lmax=_LMAX_ \
+  ringset=_OUTPATH_/ringset.fits \
+  sky_alm=_OUTPATH_/sky.alm \
+  beam_alm=_OUTPATH_/beam.alm \
+  beammmax=2 \
+  lmax_out=_LMAX2_ \
+  && \
+_PRECOMMAND_ ${BINPATH}/ringset2map \
+  focalplane_db=_FPDB_ \
+  detector_id=_DETECTOR_ \
+  ringset=_OUTPATH_/ringset.fits \
+  nside=_NSIDE_ \
+  mapname=_OUTPATH_/convolved_map.fits \
+  interpol_order=11 \
+  && \
+_PRECOMMAND_ ${BINPATH}/map2tga ${OUTPATH}/convolved_map.fits \
+  ${OUTPATH}/convolved_map_i.tga -bar -xsz 1024 -title "Convolved Map (I-Stokes)" && \
+_PRECOMMAND_ ${BINPATH}/map2tga ${OUTPATH}/convolved_map.fits \
+  ${OUTPATH}/convolved_map_q.tga -bar -xsz 1024 -sig Q_Stokes -title "Convolved Map (Q-Stokes)" && \
+_PRECOMMAND_ ${BINPATH}/map2tga ${OUTPATH}/convolved_map.fits \
+  ${OUTPATH}/convolved_map_u.tga -bar -xsz 1024 -sig U_Stokes -title "Convolved Map (U-Stokes)" && \
+_PRECOMMAND_ ${BINPATH}/simmission4 \
+  ephemerides=_PIPE_PATH_/tab/ephemerides.fits \
+  randseed_1=1234 \
+  randseed_2=5678 \
+  dynamics=analytical \
+  pos_cog_sat_x=0.03 \
+  pos_cog_sat_y=0 \
+  pos_cog_sat_z=0.93 \
+  i_sat_xx=2236.5 \
+  i_sat_yy=2276.7 \
+  i_sat_zz=2650.3 \
+  i_sat_xy=-98 \
+  i_sat_xz=-0.1 \
+  i_sat_yz=0.7 \
+  r_panel_sat=2 \
+  specref_panel_sat=0.17 \
+  diffrel_panel_sat=0.1 \
+  mode_zaxis_pointing=gaussian \
+  sigma_zaxis_x_pointing=0.2 \
+  sigma_zaxis_y_pointing=0.2 \
+  delta_zaxis_max_x_pointing=1.0 \
+  delta_zaxis_max_y_pointing=1.0 \
+  mode_phase_pointing=random \
+  mode_rate_rot_pointing=gaussian \
+  sigma_rate_rot_pointing=0.0006 \
+  delta_rate_rot_max_pointing=0.0012 \
+  scanfile=_PIPE_PATH_/tab/20090524_20101114_0010_L.PPL.txt \
+  scandataformat=ppl \
+  first_period=_FIRST_PERIOD_ \
+  last_period=_LAST_PERIOD_ \
+  period_rot_scan=1.0 \
+  file_mission=_OUTPATH_/satpoint.fits \
+  period_sm_mission=1 \
+  simulatepointings=_FULL_MISSION_ \
+  && \
+_PRECOMMAND_ ${BINPATH}/multimod \
+  oversampling_factor=_OFACTOR_ \
+  nside=_NSIDE_ \
+  nominal_pointing=_NOMINAL_POINTING_ \
+  sat_info=_OUTPATH_/satpoint.fits \
+  satinfo_ephemeris=_PIPE_PATH_/tab/ephemerides.fits \
+  detector_id=_DETECTOR_ \
+  ringset=_OUTPATH_/ringset.fits \
+  output_type=SIGNAL \
+  focalplane_db=_FPDB_ \
+  single_precision_detpt=true \
+  map_file=_OUTPATH_/signal_s_map.fits \
+  cnt_file=_OUTPATH_/signal_s_cnt.fits \
+  source_mixed=Y \
+  interpol_order=11 \
+  calibrate_signal=true \
+  && \
+_PRECOMMAND_ ${BINPATH}/map2tga ${OUTPATH}/signal_s_map.fits \
+  ${OUTPATH}/signal_s_map.tga -bar -xsz 1024 -title "Sampled Sky Map" && \
+_PRECOMMAND_ ${BINPATH}/map2tga ${OUTPATH}/signal_s_cnt.fits \
+  ${OUTPATH}/signal_s_cnt.tga -bar -log -xsz 1024 -title "Log10 Sky coverage (samples)" -sig "Hits" && \
+_PRECOMMAND_ ${BINPATH}/multimod \
+  oversampling_factor=_OFACTOR_ \
+  nside=_NSIDE_ \
+  nominal_pointing=_NOMINAL_POINTING_ \
+  sat_info=_OUTPATH_/satpoint.fits \
+  satinfo_ephemeris=_PIPE_PATH_/tab/ephemerides.fits \
+  detector_id=_DETECTOR_ \
+  ringset=_OUTPATH_/ringset.fits \
+  output_type=I \
+  focalplane_db=_FPDB_ \
+  map_file=_OUTPATH_/signal_i_map.fits \
+  source_mixed=Y \
+  interpol_order=11 \
+  calibrate_signal=true \
+  && \
+_PRECOMMAND_ ${BINPATH}/map2tga ${OUTPATH}/signal_i_map.fits \
+  ${OUTPATH}/signal_i_map.tga -bar -xsz 1024 -title "Sampled Sky Map (I-Stokes)" && \
+_PRECOMMAND_ ${BINPATH}/multimod \
+  oversampling_factor=_OFACTOR_ \
+  nside=_NSIDE_ \
+  nominal_pointing=_NOMINAL_POINTING_ \
+  sat_info=_OUTPATH_/satpoint.fits \
+  satinfo_ephemeris=_PIPE_PATH_/tab/ephemerides.fits \
+  detector_id=_DETECTOR_ \
+  ringset=_OUTPATH_/ringset.fits \
+  output_type=Q \
+  focalplane_db=_FPDB_ \
+  map_file=_OUTPATH_/signal_q_map.fits \
+  source_mixed=Y \
+  interpol_order=11 \
+  calibrate_signal=true \
+  && \
+_PRECOMMAND_ ${BINPATH}/map2tga ${OUTPATH}/signal_q_map.fits \
+  ${OUTPATH}/signal_q_map.tga -bar -xsz 1024 -title "Sampled Sky Map (Q-Stokes)" && \
+_PRECOMMAND_ ${BINPATH}/multimod \
+  oversampling_factor=_OFACTOR_ \
+  nside=_NSIDE_ \
+  nominal_pointing=_NOMINAL_POINTING_ \
+  sat_info=_OUTPATH_/satpoint.fits \
+  satinfo_ephemeris=_PIPE_PATH_/tab/ephemerides.fits \
+  detector_id=_DETECTOR_ \
+  ringset=_OUTPATH_/ringset.fits \
+  output_type=U \
+  focalplane_db=_FPDB_ \
+  map_file=_OUTPATH_/signal_u_map.fits \
+  source_mixed=Y \
+  interpol_order=11 \
+  calibrate_signal=true \
+  && \
+_PRECOMMAND_ ${BINPATH}/map2tga ${OUTPATH}/signal_u_map.fits \
+  ${OUTPATH}/signal_u_map.tga -bar -xsz 1024 -title "Sampled Sky Map (U-Stokes)" && \
+_PRECOMMAND_ ${BINPATH}/multimod \
+  oversampling_factor=_OFACTOR_ \
+  nside=_NSIDE_ \
+  nominal_pointing=_NOMINAL_POINTING_ \
+  sat_info=_OUTPATH_/satpoint.fits \
+  satinfo_ephemeris=_PIPE_PATH_/tab/ephemerides.fits \
+  detector_id=_DETECTOR_ \
+  focalplane_db=_FPDB_ \
+  map_file=_OUTPATH_/dipole_map.fits \
+  source_dipole=Y \
+  calibrate_signal=true \
+  && \
+_PRECOMMAND_ ${BINPATH}/map2tga ${OUTPATH}/dipole_map.fits \
+  ${OUTPATH}/dipole_map.tga -bar -xsz 1024 -title "Dipole" && \
+_PRECOMMAND_ ${BINPATH}/multimod \
+  oversampling_factor=_OFACTOR_ \
+  nside=_NSIDE_ \
+  nominal_pointing=_NOMINAL_POINTING_ \
+  sat_info=_OUTPATH_/satpoint.fits \
+  satinfo_ephemeris=_PIPE_PATH_/tab/ephemerides.fits \
+  detector_id=_DETECTOR_ \
+  ringset=_OUTPATH_/ringset.fits \
+  output_type=I \
+  focalplane_db=_FPDB_ \
+  map_file=_OUTPATH_/oof_map.fits \
+  source_mixed=Y \
+  interpol_order=11 \
+  source_oof=Y \
+  oof_rand_seed=1234 \
+  oof_num_real=1 \
+  oof_method=NEWNOISE \
+  calibrate_signal=true \
+  && \
+_PRECOMMAND_ ${BINPATH}/map2tga ${OUTPATH}/oof_map.fits \
+  ${OUTPATH}/oof_map.tga -bar -xsz 1024 -title "Noised Sky Map" && \
+_PRECOMMAND_ ${BINPATH}/multimod \
+  source_pntsrc=Y \
+  map_file=_OUTPATH_/pntsrc_map.fits \
+  nside=_NSIDE_ \
+  detector_id=_DETECTOR_ \
+  focalplane_db=_FPDB_ \
+  sat_info=_OUTPATH_/satpoint.fits \
+  satinfo_ephemeris=_PIPE_PATH_/tab/ephemerides.fits \
+  nominal_pointing=_NOMINAL_POINTING_ \
+  oversampling_factor=_OFACTOR_ \
+  beam_file_type=4 \
+  beam_file=_OUTPATH_/beam.fits \
+  beam_radius_max=1.5 \
+  pntsrc_file=_OUTPATH_/pntsrc_catalog2.fits \
+  planet_file=_PIPE_PATH_/tab/ephemerides.fits \
+  calibrate_signal=true \
+  && \
+_PRECOMMAND_ ${BINPATH}/map2tga ${OUTPATH}/pntsrc_map.fits \
+  ${OUTPATH}/pntsrc_map.tga -bar -xsz 1024 -title "Pointsource Sky Map" && \
+_PRECOMMAND_ ${BINPATH}/multimod \
+  oversampling_factor=_OFACTOR_ \
+  nside=_NSIDE_ \
+  nominal_pointing=_NOMINAL_POINTING_ \
+  sat_info=_OUTPATH_/satpoint.fits \
+  satinfo_ephemeris=_PIPE_PATH_/tab/ephemerides.fits \
+  detector_id=_DETECTOR_ \
+  focalplane_db=_FPDB_ \
+  single_precision_detpt=true \
+  map_file=_OUTPATH_/zle_map.fits \
+  calibrate_signal=true \
+  source_zle=t \
+  zle_ephemeris=_PIPE_PATH_/tab/ephemerides.fits \
+  zle_components=1 \
+  && \
+_PRECOMMAND_ ${BINPATH}/map2tga ${OUTPATH}/zle_map.fits \
+  ${OUTPATH}/zle_map.tga -bar -xsz 1024 -title "Zodiacal light"
+
+if [ "$?" = "0" ] ; then
+  _VIEWER_ \
+     ${OUTPATH}/signal_s_cnt.tga \
+     ${OUTPATH}/signal_s_map.tga \
+     ${OUTPATH}/sky_i.tga \
+     ${OUTPATH}/convolved_map_i.tga \
+     ${OUTPATH}/signal_i_map.tga \
+     ${OUTPATH}/oof_map.tga \
+     ${OUTPATH}/sky_q.tga \
+     ${OUTPATH}/convolved_map_q.tga \
+     ${OUTPATH}/signal_q_map.tga \
+     ${OUTPATH}/sky_u.tga \
+     ${OUTPATH}/convolved_map_u.tga \
+     ${OUTPATH}/signal_u_map.tga \
+     ${OUTPATH}/pntsrc_map.tga \
+     ${OUTPATH}/dipole_map.tga \
+     ${OUTPATH}/zle_map.tga
+else
+  echo "A fatal error occurred! Process aborted."
+  exit 1
+fi

@@ -1,0 +1,20 @@
+IMPORTANT NOTICE:
+=================
+
+Except for some small differences, this software reflects the final state of
+the Planck Simulation package as it was developed for the Planck collaboration.
+Many of the individual programs are very specialized tools and cannot be
+profitably used without a deep understanding of Planck-internal data structures,
+conventions, etc. Even compilation may fail on platforms which haven't been
+tested!
+As such, the sources might not be of immediate use to a broad audience - at
+least not for running your own simulation pipelines and trying to reproduce
+simulations done by the Planck Data Processing Centres. On the other hand,
+the code might give external programmers a clearer insight into the functioning
+of the simulation package than the scientific paper describing it. Also, some
+of the algorithms may very well be re-usable in different contexts, even outside
+astronomy.
+
+No resources are allocated for providing support for the software package,
+although the authors might be happy to do so on a voluntary basis, as far as
+their time allows.

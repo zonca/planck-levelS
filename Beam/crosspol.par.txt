@@ -1,0 +1,31 @@
+Parameters read by crosspol:
+
+focalplane_db (string):
+  name of file containing focal plane database
+
+detector_id (string):
+  detector ID
+
+Either:
+  co_file_polar (string):
+    Input co-polar beam object.
+
+  cross_file_polar (string, default=''):
+    Input cross-polar beam object.
+
+  eff_file_polar (string):
+    Output effective beam object.
+Or:
+  co_file_square (string):
+    Input co-polar beam object.
+
+  cross_file_square (string, default=''):
+    Input cross-polar beam object.
+
+  eff_file_square (string):
+    Output effective beam object.
+End
+
+angle (double, default=0):
+  Angle between coordinate systems of co- and
+  cross-polar beams

@@ -1,0 +1,74 @@
+Parameters read by almmixer:
+
+focalplane_db (string):
+  input file containing the detector database
+
+detector_id (string):
+  name of the detector
+
+amx_nmaps (integer):
+  number of maps to mix
+
+amx_output_map (string):
+  output file name for the mixed a_lm
+
+amx_lmax (integer):
+  maximum l of the output a_lm
+
+amx_mmax (integer):
+  maximum m of the output a_lm
+
+amx_polar (bool):
+  if true, polarised a_lm are created. Note that a_lm without polarisation
+  information can still be used as input; they will only be mixed into the
+  intensity a_lm set.
+
+amx_response_type (string):
+  shape of the detector response function
+    DELTA : delta function at the detector frequency, with a magnitude of the
+            detector bandwidth
+    TOPHAT: tophat function from the minimum to the maximum frequency of the
+            detector
+    GAUSS : Gauss function centered at the detector frequency, with a sigma
+            of the detector bandwidth
+
+amx_monopole (bool, default=false):
+  whether the CMB monopole should be included when a CMB map is present.
+
+do x=1,amx_nmaps
+  amx_mapname[x] (string):
+    input alm file for component [x]
+
+  amx_maptype[x] (string):
+    type of the component [x]
+      CMB       : polarised CMB fluctuation map (as created by syn_alm)
+      CMB_UNPOL : unpolarised CMB fluctuation map (as created by syn_alm)
+      DUST      : galactic dust emission
+      DUST2     : galactic dust emission with a two-component model suggested
+                  by C. Baccigalupi
+      SYNCHRO   : galactic synchrotron emission
+      SZ        : thermal Sunyaev-Zeldovich effect
+      SZKIN     : kinetic Sunyaev-Zeldovich effect
+      FREEFREE  : free-free emission
+      CO        : emission of rotating CO
+      MJY       : unpolarised map is given in MJy/sr at the detector frequency;
+                  no spectral extrapolation is performed
+      MJY_POL   : polarised map is given in MJy/sr at the detector frequency;
+                  no spectral extrapolation is performed
+      KRJ       : unpolarised map is given in K_RJ;
+                  will be added unchanged to the output map
+      KRJ_POL   : polarised map is given in K_RJ;
+                  will be added unchanged to the output map
+
+  if (amx_maptype[x]==DUST)
+    amx_dust_temp[x] (double):
+      temperature (in K) for the galactic dust emission.
+      A commonly used value is 18K
+  endif
+
+  if (amx_maptype[x]==CO)
+    amx_co_temp[x] (double):
+      temperature (in K) of the rotating CO molecules.
+      A commonly used value is 20K.
+  endif
+end do

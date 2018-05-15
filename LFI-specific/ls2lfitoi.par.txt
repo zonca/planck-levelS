@@ -1,0 +1,64 @@
+Parameters read by ls2lfitoi:
+
+therm_sky_file (string, default="")
+ if not empty Sky thermal fluctuations TOD is read
+
+therm_load_file (string, default="")
+ if not empty Load thermal fluctuations TOD is read
+
+fspike_file (string, default="")
+ if not empty frequency spikes TOD is read
+
+time_file (string, default="")
+ if not empty toi.LS_TimeTOD object with time stamp is read
+
+telescope_file (string, default="")
+  if not empty toi.LS_toi with fluctuations of telescope temperature
+  sampled at the right detector sampling frequency are read
+
+tref_temp (double, default=4.5):
+ reference load radiometric temperature (in K). In the current
+ implementation it is assumed to be constant. Usually around 4.5 K
+ this is the zero level for the load fluctuations. Be sure to
+ input here the proper zero level if it is different.
+
+t_telescope (double, default=42):
+  reference telescope temperature in K.
+
+emissivity (double, default=1):
+  emissivity of the telescope.
+
+has_monopole (bool):
+   boolean variable to determines whether input simulated signal
+   toi contains the CMB monopole
+
+detector_id (string):
+  detector identifier (e.g. LFI-28S)
+
+tsky (string):
+  toi as output from multimod (expected toi.LS_toi) with ONLY signal
+
+tsky_noise (string):
+  toi with pure white noise with the expected value of instrument sensitivity
+
+tref_noise (string):
+  another independent toi with pure white noise with the
+  expected value of instrument sensitivity
+
+oof_noise (string):
+  toi with pure 1/f noise with properties expected in the
+  differenced (i.e. T_sky - R * T_load) data
+
+oof_noise_tp (string):
+  toi with pure 1/f noise with properties expected in the
+  Total Power (un-differenced) data. Usually knee-frequency
+  is around few x 10 Hz
+
+file_toi (string):
+  output toi.science.LFI_Data with correct data structure
+
+focalplane_db (string):
+  location of the instrument database
+
+verbosity (bool, default=false):
+  enable verbose messages to the console?

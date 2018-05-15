@@ -1,0 +1,10 @@
+Parameters read by pntsrc2map:
+
+catalog (string):
+  name of the input catalog
+
+nside (int):
+  Nside parameter of the output Healpix map
+
+outfile (string):
+  name of the output map file

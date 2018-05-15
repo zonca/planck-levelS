@@ -1,0 +1,57 @@
+Parameters read by gapmaker:
+
+focalplane_db (string):
+  input file containing the detector database
+
+detector_id (string):
+  name of the detector
+
+sat_info (string):
+  Name of the input file containing the satellite information.
+
+first_pointing (int):
+  number of the first pointing period to calculate. Default is 1,
+  which is also used when "-1" is given.
+
+last_pointing (int):
+  number of the last pointing period to calculate. Default is the last
+  period in the satellite information file, which is also used when "-1"
+  is given.
+
+gapfile (string):
+  input object containing the gap information
+
+flagfile (string, default=""):
+  if not empty, the flag information is written to this object
+
+timestamp_in (string, default=""):
+  if not empty, contains the input object with timestamp data
+
+if (timestamp_in!="")
+  timestamp_out (string):
+    output object containing the compacted timestamp data
+endif
+
+toi_in (string, default=""):
+  if not empty, contains the input object with TOI data
+
+if (toi_in!="")
+  toi_out (string):
+    output object containing the compacted TOI data
+endif
+
+detpt_in (string, default=""):
+  if not empty, contains the input object with detector pointings
+
+if (detpt_in!="")
+  detpt_out (string):
+    output object containing the compacted detector pointings
+endif
+
+quaternions_in (string, default=""):
+  if not empty, contains the input object with quaternions
+
+if (quaternions_in!="")
+  quaternions_out (string):
+    output object containing the compacted quaternions
+endif

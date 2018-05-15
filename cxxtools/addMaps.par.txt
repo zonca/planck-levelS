@@ -1,0 +1,17 @@
+usage: addMaps <init object>
+or:    addMaps <file1> <factor1> [<file2> <factor2>] [...] [output file]
+
+Parameters read by addMaps:
+
+map[x] (string):
+  input file name for map [x]
+
+factor[x] (double):
+  multiplication factor for map [x]
+
+In the descriptions above, [x] is an integer without leading zeroes.
+For n components, each component must have a unique number from the
+range [1;n].
+
+outfile (string):
+  output file name for coadded map
